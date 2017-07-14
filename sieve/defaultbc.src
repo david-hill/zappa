@@ -1,0 +1,15 @@
+require ["fileinto"];
+
+if header :matches "Subject" ["*YOUR CareerAlert*"] { 
+    fileinto "Workopolis";
+} elsif header :matches "Subject" ["*Poste :*"] { 
+    fileinto "Jobboom";
+} elsif header :matches "Subject" ["{Spam*","Virus Detected"] {
+      fileinto "Junk";
+} elsif header :matches "Subject" ["Cron <*"] {
+      fileinto "Cron";
+} elsif address :matches "to" "sales@*" {
+    fileinto "Junk";
+} else {
+     keep;
+}

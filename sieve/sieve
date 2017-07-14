@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -e /usr/lib/cyrus-imapd/sievec ]; then
+  /usr/lib/cyrus-imapd/sievec defaultbc.src defaultbc
+else
+  /usr/sbin/sievec defaultbc.src defaultbc
+fi
