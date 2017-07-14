@@ -27,3 +27,6 @@ systemctl restart mailscanner
 cp ups/* /etc/ups
 systemctl enable nut-server
 systemctl restart nut-server
+
+systemctl enable named
+systemctl restart named
