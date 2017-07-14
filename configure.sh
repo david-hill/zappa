@@ -12,3 +12,6 @@ chmod 600 /root/.ssh/authorized_keys
 
 cp postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
+
+cp mailscanner /etc/MailScanner
+systemctl restart mailscanner
