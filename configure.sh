@@ -13,7 +13,7 @@ chmod 600 /root/.ssh/authorized_keys
 cp postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
 
-yum install -y spamassassin
+yum install -y spamassassin mariadb mariadb-server cacti
 
 cp -pr mailscanner/* /etc/MailScanner
 cp -pr mail/* /etc/mail/spamassassin/
