@@ -1,0 +1,979 @@
+# =============== MailScanner: spam.assassin.prefs.conf ===============
+
+# SpamAssassin preferences for MailScanner users should be placed in 
+# this file to avoid being overwritten by a SpamAssassin upgrade.
+# For a complete listing of configurable parameters, please see:
+# 
+#	http://www.spamassassin.org/doc/Mail_SpamAssassin_Conf.html
+
+# =============== SpamAssassin Preferences ===============
+
+# This file is read specially by MailScanner when it starts up
+# SpamAssassin. Since MailScanner 4.48.4-2 this behavior is
+# debian-specific. Upstream loads this file through a link placed in
+# /etc/spamassassin/
+
+# To check your configuration, run the command spamassassin -D --lint
+# -p /etc/MailScanner/spam.assassin.prefs.conf
+
+# ================== Settings For SpamAssassin ===========================
+
+# dns_available { yes | test[: name1 name2...] | no } (default: test)
+# By default, SpamAssassin will query some default hosts on the internet
+# to attempt to check if DNS is working on not. The problem is that it can
+# introduce some delay if your network connection is down, and in some
+# cases it can wrongly guess that DNS is unavailable because the test
+# connections failed. SpamAssassin includes a default set of 13 servers,
+# among which 3 are picked randomly.
+
+dns_available yes
+
+
+# =============== White list and Black list addresses ===============
+
+# While you can white list here but see below for a better place. 
+
+# White list addresses should be added in
+
+#      /etc/MailScanner/rules/spam.whitelist.rules
+
+# Black list addresses should be added in
+
+#      /etc/MailScanner/rules/spam.blacklist.rules
+
+# FSL Notes: we need to set the default rule for:
+# Is Definitely Spam = no
+# to:
+#      %rules-dir/spam.blacklist.rules
+# and create a default rules-dir/spam.blacklist.rules file
+
+
+# =============== OK Locales ===============
+
+#ok_locales              all
+ok_locales              en fr
+ok_languages            en fr
+
+# =============== Bayesian Filtering ===============
+
+# By default, the Bayesian engine is used. This is a real CPU hog
+# and uses a lot of system resources to work.
+# On a small overloaded system, you might need to disable it.
+
+use_bayes 1
+
+# If your root filesystem is filling up because SpamAssassin is putting
+# large databases in /.spamassassin or /root/.spamassassin, you can
+# move them using the following lines to point to their new locations.
+# The last part of the path is not a directory name, but actually the
+# start of the filenames. So with the settings below, the Bayes files
+# will be created as /var/spool/spamassassin/bayes_msgcount, etc.
+
+# FSL Note: we need to coordinate the Bayes File Placement
+# With MailWatch
+
+# bayes_path should NOT be directory!
+# The Rules_du_jour script will choke if it is a directory.
+# It needs to be a full pathname, PLUS a partial filename.
+# In this example, the trailing "bayes" will be the "bayes*" +
+# files in the directory "/etc/MailScanner/bayes/"
+# Thanks to Matt Kettler for pointing this out.
+bayes_path /var/lib/MailScanner/bayes
+
+# This is actually used as a mask, not a raw chmod setting.
+# Thanks for Matt Kettler for spotting this one.
+# Commented out: this if for MailWatch and Exim/Postfix users only.
+bayes_file_mode 0666
+
+# Bump up SpamAssassin scores on the high and low end
+# score BAYES_00 -15.0
+# score BAYES_05 -5.0
+# score BAYES_95 5.0
+# score BAYES_99 15.0
+
+# To disable bayes autolearn
+bayes_auto_learn 1
+
+# For feeding spam and and ham for saved messages, mailboxes
+# or directories:
+
+# This MUST be customized for each site :(
+
+# Change unconfigured-debian-site to match your %org-name% as
+# set in MailScanner.conf
+
+bayes_ignore_header X-Binarystorm-MailScanner
+bayes_ignore_header X-Binarystorm-MailScanner-SpamCheck
+bayes_ignore_header X-Binarystorm-MailScanner-SpamScore
+bayes_ignore_header X-Binarystorm-MailScanner-Information
+
+# When using the scheduled Bayes expiry feature, in MailScanner.conf
+# you probably want to turn off auto-expiry in SpamAssassin as it will
+# rarely complete before it is killed for taking too long.
+# You will just end up with # MailScanner: big bayes_toks.new files
+# wasting space.
+
+# FSL Note: we run Bayes expire from a cron job
+
+bayes_auto_expire 0
+
+# If you are using a UNIX machine with all database files on local disks,
+# and no sharing of those databases across NFS filesystems, you can use a
+# more efficient, but non-NFS-safe, locking mechanism.   Do this by adding
+# the line "lock_method flock" to the /etc/mail/spamassassin/local.cf
+# file. This is strongly recommended if you're not using NFS, as it is
+# much faster than the NFS-safe locker.
+
+lock_method flock
+
+# The --auto-whitelist and -a options for "spamd" and "spamassassin" to
+# turn on the auto-whitelist have been removed and replaced by the
+# "use_auto_whitelist" configuration option which is also now turned on by
+# default.
+
+use_auto_whitelist 1
+auto_whitelist_path        /var/lib/MailScanner/auto-whitelist
+auto_whitelist_file_mode   0666
+
+# =============== RBSL related items ===============
+
+# By default, SpamAssassin will run RBL checks.  If your ISP already
+# does this, stop RBL checks in SpamAssassin by un-commenting  the
+# following line
+# skip_rbl_checks      1
+
+# paths to utilities
+
+ifplugin Mail::SpamAssassin::Plugin::Pyzor
+pyzor_path /usr/bin/pyzor
+endif
+
+#dcc_path /usr/local/bin/dccproc
+##dcc_path /usr/bin/dccproc
+ifplugin Mail::SpamAssassin::Plugin::DCC
+dcc_path /usr/local/bin/dccproc
+dcc_home /var/dcc 
+dcc_timeout         10
+dcc_body_max        999999
+dcc_fuz1_max        999999
+dcc_fuz2_max        999999
+#dcc_options         -x
+endif
+
+# Uncomment the lines below to stop using the specific service
+# To stop Razor2 checks, uncomment the following line
+ use_razor2           1
+# To stop DCC checks, uncomment the following line
+  use_dcc             1
+# To stop Pyzor checks, uncomment the following line
+  use_pyzor   1
+
+
+# The timeouts for blacklists and Razor are rather generous in the
+# default state that SpamAssassin is shipped. Reducing these
+# stops a lot of timeouts from removing SpamAssassin scores
+# altogether.
+
+rbl_timeout 20
+razor_timeout 10
+pyzor_timeout 10
+
+
+# If you specify these scores, SpamAssassin will do RBL checks as well
+# as MailScanner, which just wastes CPU power and network bandwidth.
+# Either do them here by un-commenting the rules below
+# (if you have paid for them) or else uncomment the "skip_rbl_checks" #
+# line above and let MailScanner do the checks instead.
+
+#score RCVD_IN_BL_SPAMCOP_NET    4
+# These next 3 will cost you money, see mailscanner.conf.
+#score RCVD_IN_RBL               10
+#score RCVD_IN_RSS               1
+#score RCVD_IN_DUL               1
+
+# =============== SpamAssassin Header Processing ===============
+
+# SpamAssassin will attempt to discover the address used in the 'MAIL FROM:'
+# phase of the SMTP transaction that delivered this message, if this data
+# has been made available by the SMTP server. This is used in the EnvelopeFrom
+# pseudo-header, and for various rules such as SPF checking.
+# This should be explicitly set for MailScanner
+envelope_sender_header X-MailScanner-From
+
+# =============== Adding SpamAssassin Rules ===============
+
+# Add your own customized scores for some tests below.  The default
+# scores are read from the installed "spamassassin.cf" file, but you
+# can override or disable the here.
+# To see the list of tests and their default scores, go to
+# http://spamassassin.taint.org/tests.html
+
+# These next 3 lines will add a local rule to SpamAssassin to help
+# protect you from the friendlygreetings.com nasty-gram which will
+# send lots of spam from your PC if you let it. Not really a virus,
+# but you don't want your users all clicking on it.
+
+# This is old now.
+# header   FRIEND_GREETINGS    Subject =~ /you have an E-Card from/i
+# describe FRIEND_GREETINGS    Nasty E-card from FriendGreetings.com
+# score    FRIEND_GREETINGS    100.0
+# header   FRIEND_GREETINGS2   Subject =~ /you have a greeting card from/i
+# describe FRIEND_GREETINGS2   Nasty E-card from FriendGreetings.com
+# score    FRIEND_GREETINGS2   100.0
+
+
+# =============== Disable SpamAssassin Rules ===============
+
+# To disable a SpamAssassin rule simply add an uncommented
+# line similar to:
+# score SUBJ_ILLEGAL_CHARS 0.0
+
+# =============== Change SpamAssassin Rules scores ===============
+
+# To Change a SpamAssassin rule Score simply add an uncommented
+# line similar to:
+# score SUBJ_ILLEGAL_CHARS 2.1
+
+
+# =============== Special Case Rules ===============
+
+# added Mon Jan 12 16:14:04 EST 2004 to stop the forgers of
+# Not needed ins SA 3.0
+# HABEAUS headers
+# score HABEAS_SWE -2.0
+#### Special Case Rules #####
+
+# =============== Historic Rules ===============
+
+# Osirusoft RBSL is dead
+# score RCVD_IN_OSIRUSOFT_COM 0.0
+# score X_OSIRU_OPEN_RELAY 0.0
+# score X_OSIRU_DUL 0.0
+# score X_OSIRU_SPAM_SRC 0.0
+# score X_OSIRU_SPAMWARE_SITE 0.0
+# score X_OSIRU_DUL_FH 0.0
+
+
+
+# score RCVD_IN_RFCI 0.0
+# score DNS_FROM_RFCI_DSN 0.0
+
+# =============== Your Edits Go Here  ===============
+
+score RCVD_IN_RSL 0
+
+# Steve@fsl.com edit Sun Jan 16 12:17:16 CST 2005
+# disable the ALL_TRUSTED ruleset that comes with SA 3.x.
+# It's generating too many false positives
+
+# If you have problems where ALL_TRUSTED is matching external email,
+# including spam, then SpamAssassin has become confused about which hosts are
+# a part of your trusted_networks. The most common cause of this is having a
+# gateway mail exchanger that has a reserved IP and gets NATed by your
+# firewall. Fortunately the problem is easy to fix by manually declaring a
+# trusted_networks setting. See man Mail::SpamAssassin::Conf for details.
+# Once manually set, SA won't try to guess.
+#
+# If that does not fix your problem, the other possibility is you have an MTA
+# that generates malformed Received: headers. If you've modified your
+# Received: header format, please put it back to the standard format.
+# SpamAssassin is quite tolerant of deviations from the RFC 2822 format, but
+# there are some combinations it can't handle. If the malformed headers are
+# being made by some form of network appliance that you can't fix, report a
+# bug to your vendor, and as a short-term fix set the score of ALL_TRUSTED to
+# 0. However, realize that other problems may occur as a result of the
+# mis-parsed headers and the root cause does need fixing.
+#
+clear_trusted_networks
+clear_internal_networks
+internal_networks 192.168.1.0/24 127.0.0.1/32 
+trusted_networks 192.168.1.0/24 127.0.0.1/32
+score ALL_TRUSTED -0.01
+
+header      __FROM_BINARYSTORM_NET From =~ /\@binarystorm.net/i
+header      __FROM_BINARYSTORM_ORG From =~ /\@binarystorm.org/i
+header      __FROM_DAVIDCHILL_CA From =~ /\@davidchill.ca/i
+meta        FROM_BINARYSTORM_NET ((__FROM_BINARYSTORM_NET||__FROM_BINARYSTORM_ORG||__FROM_DAVIDCHILL_CA) && ! ALL_TRUSTED)
+describe    FROM_BINARYSTORM_NET From Binarystorm.net
+score       FROM_BINARYSTORM_NET 6
+
+meta        __CUST_BAYES  BAYES_99  || BAYES_95 || BAYES_80 || BAYES_60 || BAYES_50
+
+meta        TRUSTED_FROM_BINARYSTORM_NET ((__FROM_BINARYSTORM_NET||__FROM_BINARYSTORM_ORG||__FROM_DAVIDCHILL_CA) && ALL_TRUSTED)
+score       TRUSTED_FROM_BINARYSTORM_NET -6
+
+meta        CUST_BINARY_BAYES_BRBL FROM_BINARYSTORM_NET && __CUST_BAYES && RCVD_IN_BRBL_LASTEXT
+score       CUST_BINARY_BAYES_BRBL   2 
+
+meta        CUST_RAZOR_SPAMCOP_BAYES     RAZOR2_CF_RANGE_E8_51_100 && RCVD_IN_BL_SPAMCOP_NET && __CUST_BAYES
+score       CUST_RAZOR_SPAMCOP_BAYES     2
+
+meta        CUST_RDNS_BAYES_XBL_SORBS    RDNS_NONE && __CUST_BAYES && RCVD_IN_XBL && RCVD_IN_SORBS_WEB
+score       CUST_RDNS_BAYES_XBL_SORBS    2 
+
+meta        CUST_RDNS_BAYES_XBL_SORBS_SPAMCOP_PSBL CUST_RDNS_BAYES_XBL_SORBS && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PSBL
+score       CUST_RDNS_BAYES_XBL_SORBS_SPAMCOP_PSBL 2
+
+meta        CUST_BAYES_DCC_RAZOR_SPAMCOP_RIBL_PBL    __CUST_BAYES && DCC_CHECK && RAZOR2_CF_RANGE_E8_51_100 && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PBL
+score CUST_BAYES_DCC_RAZOR_SPAMCOP_RIBL_PBL 2
+
+meta        CUST_BAYES_PYZOR_RAZOR_RIBL_PBL_RDNS     __CUST_BAYES && PYZOR_CHECK && RAZOR2_CF_RANGE_E4_51_100 && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && RDNS_NONE
+score       CUST_BAYES_PYZOR_RAZOR_RIBL_PBL_RDNS 2.347
+
+meta        CUST_BAYES_RAZOR_RIBL_PBL_SURBL  __CUST_BAYES && RAZOR2_CF_RANGE_E8_51_100 && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && URIBL_AB_SURBL
+score       CUST_BAYES_RAZOR_RIBL_PBL_SURBL  1.131
+
+meta        CUST_BAYES_RIBL_PBL_RNBL_XBL_RDNS    __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && RCVD_IN_RP_RNBL && RCVD_IN_XBL && RDNS_NONE
+score       CUST_BAYES_RIBL_PBL_RNBL_XBL_RDNS    1.439
+
+meta        CUST_BAYES_DCC_PYZOR_RAZOR      __CUST_BAYES && DCC_CHECK && PYZOR_CHECK && RAZOR2_CF_RANGE_E8_51_100
+score       CUST_BAYES_DCC_PYZOR_RAZOR      2.318
+
+meta        CUST_BAYES_DCC_PYZOR_RAZOR_SPAMCOP_PBL  CUST_BAYES_DCC_PYZOR_RAZOR && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PBL
+score       CUST_BAYES_DCC_PYZOR_RAZOR_SPAMCOP_PBL  1.143
+
+meta        CUST_BAYES_SPAMCOP_RIBL_PSBL_RNBL_SORBS  __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PSBL && RCVD_IN_RP_RNBL && RCVD_IN_SORBS_WEB
+score       CUST_BAYES_SPAMCOP_RIBL_PSBL_RNBL_SORBS 3.851
+
+meta        CUST_BAYES_SPAMCOP_PBL_RNBL_XBL_RDNS    __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PBL && RCVD_IN_RP_RNBL && RCVD_IN_XBL && RDNS_DYNAMIC
+score       CUST_BAYES_SPAMCOP_PBL_RNBL_XBL_RDNS    2.114
+
+meta        CUST_BAYES_SPAMCOP_RIBL_PBL_PSBL_RNBL_XBL    __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && RCVD_IN_PSBL && RCVD_IN_RP_RNBL && RCVD_IN_XBL
+score       CUST_BAYES_SPAMCOP_RIBL_PBL_PSBL_RNBL_XBL    3.7
+
+meta        CUST_BAYES_RAZOR_SPAMCOP_RIBL_PBL_SORBS_XBL_RNDS __CUST_BAYES && RAZOR2_CF_RANGE_51_100 && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && RCVD_IN_SORBS_WEB && RCVD_IN_XBL &&
+RDNS_NONE
+score CUST_BAYES_RAZOR_SPAMCOP_RIBL_PBL_SORBS_XBL_RNDS   3.225
+
+meta        CUST_BAYES_DCC_RAZOR_SPAMCOP_RIBL_PSBL_SORBS_XBL_RDNS __CUST_BAYES && DCC_CHECK && RAZOR2_CF_RANGE_E4_51_100 && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PSBL && RCVD_IN_SORBS_WEB && RCVD_IN_XBL && RDNS_NONE
+score       CUST_BAYES_DCC_RAZOR_SPAMCOP_RIBL_PSBL_SORBS_XBL_RDNS    0.785
+
+meta        CUST_BAYES_BINARYSTORM_SBL  __CUST_BAYES && FROM_BINARYSTORM_NET && URIBL_SBL
+score       CUST_BAYES_BINARYSTORM_SBL 0.13
+
+meta        CUST_BAYES_DCC_RIBL_PBL  __CUST_BAYES && DCC_CHECK && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL
+score       CUST_BAYES_DCC_RIBL_PBL  0.9
+
+meta        CUST_BAYES_DCC_PYZOR_RAZOR_PBL  __CUST_BAYES && DCC_CHECK && PYZOR_CHECK && RAZOR2_CF_RANGE_E4_51_100 && RCVD_IN_PBL
+score       CUST_BAYES_DCC_PYZOR_RAZOR_PBL  1.358
+
+meta        CUST_BAYES_DCC_PYZOR_RAZOR_PBL_RNBL CUST_BAYES_DCC_PYZOR_RAZOR_PBL && RCVD_IN_RP_RNBL
+score       CUST_BAYES_DCC_PYZOR_RAZOR_PBL_RNBL 3.842
+
+meta        CUST_BINARYSTORM_RAZOR_SPAMCOP_RIBL_RNDS  FROM_BINARYSTORM_NET && RAZOR2_CHECK && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT && RDNS_NONE
+score       CUST_BINARYSTORM_RAZOR_SPAMCOP_RIBL_RNDS  1.744 
+
+meta        CUST_BAYES_BINARYSTORM_RAZOR_PBL_RDNS   __CUST_BAYES && FROM_BINARYSTORM_NET && RAZOR2_CF_RANGE_E8_51_100 && RCVD_IN_PBL && RDNS_NONE
+score       CUST_BAYES_BINARYSTORM_RAZOR_PBL_RDNS   0.365
+
+meta        CUST_BAYES_DCC_PYZOR_SPAMCOP_RIBL    __CUST_BAYES && DCC_CHECK && PYZOR_CHECK && RCVD_IN_BL_SPAMCOP_NETRCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT
+score       CUST_BAYES_DCC_PYZOR_SPAMCOP_RIBL    1.762
+
+meta        CUST_BAYES_DCC_PYZOR_SPAMCOP_RIBL_RNBL_UB __CUST_BAYES && DCC_CHECK && PYZOR_CHECK && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT && RCVD_IN_RP_RNBL && URIBL_BLACK
+score       CUST_BAYES_DCC_PYZOR_SPAMCOP_RIBL_RNBL_UB 4.901
+
+meta        CUST_BAYES_DCC_PYZOR_SPAMCOP_RIBL_PSBL_RNBL  __CUST_BAYES && DCC_CHECK && PYZOR_CHECK && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PSBL && RCVD_IN_RP_RNBL
+score       CUST_BAYES_DCC_PYZOR_SPAMCOP_RIBL_PSBL_RNBL  3.809
+
+meta        CUST_BAYES_DCC_RIBL_PBL_PYZOR_RDNS   CUST_BAYES_DCC_LASTEXT_PBL && PYZOR_CHECK && RDNS_NONE
+score       CUST_BAYES_DCC_RIBL_PBL_PYZOR_RDNS   3.0
+
+meta        CUST_BAYES_DCC_RIBL_PBL_XBL_RDNS     CUST_BAYES_DCC_LASTEXT_PBL && RCVD_IN_XBL && RDNS_NONE
+score       CUST_BAYES_DCC_RIBL_PBL_XBL_RDNS     0.877
+
+meta        CUST_BAYES_PYZOR_RIBL_PBL_RNBL_XBL   __CUST_BAYES && PYZOR_CHECK && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && RCVD_IN_RP_RNBL && RCVD_IN_XBL
+score       CUST_BAYES_PYZOR_RIBL_PBL_RNBL_XBL   2.831
+
+meta        CUST_BAYES_RAZOR_RIBL_PBL_RNBL_XBL_UB __CUST_BAYES && RAZOR2_CF_RANGE_E8_51_100 && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL && RCVD_IN_RP_RNBL && RCVD_IN_XBL && URIBL_BLACK
+score       CUST_BAYES_RAZOR_RIBL_PBL_RNBL_XBL_UB 4.438
+
+meta        CUST_BAYES_PYZOR_SPAMCOP_PSBL_RNBL_SORBS_XBL_DBL    __CUST_BAYES && PYZOR_CHECK && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PSBL && RCVD_IN_RP_RNBL && RCVD_IN_SORBS_WEB && RCVD_IN_XBL && URIBL_DBL_SPAM
+score       CUST_BAYES_PYZOR_SPAMCOP_PSBL_RNBL_SORBS_XBL_DBL    3.895
+
+meta        CUST_BAYES_RAZOR_PBL_SORBS_XBL  __CUST_BAYES && RAZOR2_CF_RANGE_E4_51_100 RCVD_IN_PBL && RCVD_IN_SORBS_WEB && RCVD_IN_XBL
+score       CUST_BAYES_RAZOR_PBL_SORBS_XBL  0.675
+
+meta        CUST_BAYES_DCC_PYZOR_SPAMCOP_PSBL_SORBS_XBL_UB   __CUST_BAYES && PYZOR_CHECK && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PSBL && RCVD_IN_SORBS_WEB && RCVD_IN_XBL && URIBL_BLACK
+score       CUST_BAYES_DCC_PYZOR_SPAMCOP_PSBL_SORBS_XBL_UB 4.512
+
+meta        CUST_RAZOR_SPAMCOP_BAYES_RNBL_XBL_UB    CUST_RAZOR_SPAMCOP_BAYES && RCVD_IN_RP_RNBL && RCVD_IN_XBL && URIBL_BLACK
+score       CUST_RAZOR_SPAMCOP_BAYES_RNBL_XBL_UB     1.724
+
+meta        CUST_DCC_URIBL_RAZOR    DCC_CHECK && URIBL_DBL_SPAM && RAZOR2_CF_RANGE_51_100 && RAZOR2_CF_RANGE_E8_51_100
+score       CUST_DCC_URIBL_RAZOR    2
+
+meta        CUST_BAYES_UB        URIBL_BLACK && BAYES_99
+score       CUST_BAYES_UB        2
+
+meta        CUST_BAYES_DCC_PYZOR_RAZOR_BAYES  __CUST_BAYES && DCC_CHECK && PYZOR_CHECK && RAZOR2_CHECK
+score       CUST_BAYES_DCC_PYZOR_RAZOR_BAYES 2
+
+meta        CUST_FARAWAY_BAYES  __CUST_BAYES && CUST_FARAWAY_BAYES
+score       CUST_FARAWAY_BAYES  2
+
+meta        CUST_BAYES_DCC_RDNS __CUST_BAYES && DCC_CHECK && RDNS_NONE
+score       CUST_BAYES_DCC_RDNS 2.25
+
+meta        CUST_BAYES_DCC_RDNS_CHARSETH CUST_BAYES_DCC_RDNS && CHARSET_FARAWAY_HEADER
+score       CUST_BAYES_DCC_RDNS_CHARSETH 2.0
+
+meta        CUST_BAYES_DCC_PYZOR_RAZOR_BAYES_CHARSETH    CUST_BAYES_DCC_PYZOR_RAZOR_BAYES && CHARSET_FARAWAY_HEADER
+score       CUST_BAYES_DCC_PYZOR_RAZOR_BAYES_CHARSETH    2.0
+
+meta        CUST_BAYES_RAZOR2       __CUST_BAYES && RAZOR2_CF_RANGE_51_100 
+score       CUST_BAYES_RAZOR2       1.25
+
+meta        CUST_BAYES_RAZOR2E4     __CUST_BAYES && RAZOR2_CF_RANGE_E4_51_100 
+score       CUST_BAYES_RAZOR2E4     1.25
+
+meta        CUST_BAYES_DCC          __CUST_BAYES && DCC_CHECK
+score       CUST_BAYES_DCC          1.25
+
+meta        CUST_BAYES_RAZOR        __CUST_BAYES && RAZOR2_CHECK 
+score       CUST_BAYES_RAZOR        1.25
+
+meta        CUST_BAYES_NJABL        __CUST_BAYES && RCVD_IN_NJABL_RELAY
+score       CUST_BAYES_NJABL        1.0
+
+meta        CUST_BAYES_RD        __CUST_BAYES && RDNS_DYNAMIC 
+score       CUST_BAYES_RD        1.25
+
+meta        CUST_BAYES_ILLEGAL      __CUST_BAYES && RCVD_ILLEGAL_IP
+score       CUST_BAYES_ILLEGAL      1.0
+
+meta        CUST_BAYES_CHARSETH      __CUST_BAYES && CHARSET_FARAWAY_HEADER 
+score       CUST_BAYES_CHARSETH      1.25
+
+meta        CUST_BAYES_CHARSET      __CUST_BAYES && CHARSET_FARAWAY
+score       CUST_BAYES_CHARSET      1.25
+
+meta        CUST_BAYES_CHARSETM     __CUST_BAYES && MIME_CHARSET_FARAWAY 
+score       CUST_BAYES_CHARSETM     1.25
+
+meta        CUST_PYZOR_CHARSETM     MIME_CHARSET_FARAWAY && PYZOR_CHECK
+score       CUST_PYZOR_CHARSETM     0.2
+
+meta        CUST_CHARSETM_CHARSET   MIME_CHARSET_FARAWAY && CHARSET_FARAWAY
+score       CUST_CHARSETM_CHARSET   0.2
+
+meta        CUST_CHARSETM_RDNS      MIME_CHARSET_FARAWAY && RNDS_NONE
+score       CUST_CHARSET_RDNS       0.1
+
+meta        CUST_CHARSET_RDNS       CHARSET_FARAWAY && RNDS_NONE
+score       CUST_CHARSET_RDNS       0.1
+
+meta        CUST_BAYES_UB        __CUST_BAYES && URIBL_BLACK
+score       CUST_BAYES_UB        1.0
+
+meta        CUST_BAYES_DOTM         __CUST_BAYES && DOS_OE_TO_MX
+score       CUST_BAYES_DOTM         1.25
+
+meta        CUST_BAYES_RAZORE8      __CUST_BAYES && RAZOR2_CF_RANGE_E8_51_100
+score       CUST_BAYES_RAZORE8      1.0
+
+meta        CUST_BAYES_DBL          __CUST_BAYES && URIBL_DBL_SPAM
+score       CUST_BAYES_DBL          1.0
+
+meta        CUST_BAYES_SBL          __CUST_BAYES && URIBL_SBL
+score       CUST_BAYES_SBL          1.0
+
+meta        CUST_BAYES_SURBL        __CUST_BAYES && URIBL_AB_SURBL
+score       CUST_BAYES_SURBL        1.0
+
+meta        CUST_BAYES_RDNS         __CUST_BAYES && RDNS_NONE
+score       CUST_BAYES_RDNS         1.0
+
+meta        CUST_BAYES_JPSURBL      __CUST_BAYES && URIBL_JP_SURBL
+score       CUST_BAYES_JPSURBL      1.25
+
+meta        CUST_BAYES_WSSURBL      __CUST_BAYES && URIBL_WS_SURBL
+score       CUST_BAYES_WSSURBL      1.25
+
+meta        CUST_BAYES_FHFRLB       __CUST_BAYES && FH_FAKE_RCVD_LINE_B 
+score       CUST_BAYES_FHFRLB       1.0
+
+meta        CUST_BAYES_SRTWQ        __CUST_BAYES && STOX_REPLY_TYPE_WITHOUT_QUOTES 
+score       CUST_BAYES_SRTWQ        1.0
+
+meta        CUST_BAYES_SRT          __CUST_BAYES && STOX_REPLY_TYPE
+score       CUST_BAYES_SRT          1.0
+
+meta        CUST_BAYES_DYNI         __CUST_BAYES && HELO_DYNAMIC_IPADDR2
+score       CUST_BAYES_DYNI         1.0
+
+meta        CUST_BAYES_SPLITIP      __CUST_BAYES && HELO_DYNAMIC_SPLIT_IP
+score       CUST_BAYES_SPLITIP      1.0
+
+meta        CUST_BAYES_PYZOR        __CUST_BAYES && PYZOR_CHECK
+score       CUST_BAYES_PYZOR        1.25
+
+meta        CUST_BAYES_TOC          __CUST_BAYES && TO_ONE_CHAR
+score       CUST_BAYES_TOC          1.25
+
+meta        CUST_BAYES_MF           __CUST_BAYES && MAY_BE_FORGED
+score       CUST_BAYES_MF           1.25
+
+meta        CUST_BAYES_DM           __CUST_BAYES && DIGEST_MULTIPLE
+score       CUST_BAYES_DM           0.75
+
+meta        CUST_BAYES_RATWARE      __CUST_BAYES && KB_RATWARE_OUTLOOK_MID
+score       CUST_BAYES_RATWARE      0.75
+
+meta        CUST_BAYES_HAI          __CUST_BAYES && FH_HELO_ALMOST_IP
+score       CUST_BAYES_HAI          0.5
+
+meta        CUST_BAYES_DSI          __CUST_BAYES && HELO_DYNAMIC_SPLIT_IP
+score       CUST_BAYES_DSI          0.5
+
+meta        CUST_BAYES_GANU         __CUST_BAYES && SB_GIF_AND_NO_URIS
+score       CUST_BAYES_GANU         0.75
+
+meta        CUST_BAYES_KRM          __CUST_BAYES && KB_RATWARE_MSGID
+score       CUST_BAYES_KRM          0.5
+
+meta        CUST_BAYES_SPAMMY       __CUST_BAYES && SPAMMY_XMAILER
+score       CUST_BAYES_SPAMMY       0.5
+
+meta        CUST_BAYES_ABSURBL      __CUST_BAYES && URIBL_AB_SURBL
+score       CUST_BAYES_ABSURBL      0.75
+
+meta        CUST_BAYES_F2NF         __CUST_BAYES && ADVANCE_FEE_2_NEW_FORM
+score       CUST_BAYES_F2NF         0.5
+
+meta        CUST_BAYES_F2NM         __CUST_BAYES && ADVANCE_FEE_2_NEW_MONEY
+score       CUST_BAYES_F2NM         0.5
+
+meta        CUST_BAYES_FTFL         __CUST_BAYES && FILL_THIS_FORM_LOAN
+score       CUST_BAYES_FTFL         0.5
+
+meta        CUST_BAYES_FF3          __CUST_BAYES && FORM_FRAUD_3
+score       CUST_BAYES_FF3          0.5
+
+meta        CUST_BAYES_HL           __CUST_BAYES && HK_LOTTO
+score       CUST_BAYES_HL           0.5
+
+meta        CUST_BAYES_LP004470     __CUST_BAYES && LOTTERY_PH_004470
+score       CUST_BAYES_LP004470     0.5
+
+meta        CUST_BAYES_MF3          __CUST_BAYES && MONEY_FRAUD_3
+score       CUST_BAYES_MF3          0.5
+
+meta        CUST_BAYES_GUL          __CUST_BAYES && DC_GIF_UNO_LARGO
+score       CUST_BAYES_GUL          0.5
+
+meta        CUST_BAYES_DISH         __CUST_BAYES && DC_IMAGE_SPAM_HTML
+score       CUST_BAYES_DISH         0.5
+
+meta        CUST_BAYES_DIST         __CUST_BAYES && DC_IMAGE_SPAM_TEXT
+score       CUST_BAYES_DIST         0.5    
+
+meta        CUST_BAYES_TFGNL        __CUST_BAYES && TVD_FW_GRAPHIC_NAME_LONG
+score       CUST_BAYES_TFGNL        0.5 
+
+meta        CUST_BAYES_FHEDDDD       __CUST_BAYES && FH_HELO_EQ_D_D_D_D
+score       CUST_BAYES_FHEDDDD      0.75
+
+meta        CUST_BAYES_DOTMI        __CUST_BAYES && DOS_OE_TO_MX_IMAGE
+score       CUST_BAYES_DOTMI        0.5
+
+meta        CUST_BAYES_DRAII        __CUST_BAYES && DYN_RDNS_AND_INLINE_IMAGE
+score       CUST_BAYES_DRAII        0.5
+
+meta        CUST_BAYES_EMT          __CUST_BAYES && EXTRA_MPART_TYPE
+score       CUST_BAYES_EMT          0.5
+
+meta        CUST_BAYES_HIO          __CUST_BAYES && HTML_IMAGE_ONLY_12
+score       CUST_BAYES_HIO          0.5
+
+meta        CUST_BAYES_MAD          __CUST_BAYES && MPART_ALT_DIFF
+score       CUST_BAYES_MAD          0.5
+
+meta        CUST_BAYES_HL           __CUST_BAYES && HELO_LOCALHOST
+score       CUST_BAYES_HL           0.5
+
+meta        CUST_BAYES_SHAII        __CUST_BAYES && SHORT_HELO_AND_INLINE_IMAGE
+score       CUST_BAYES_SHAII        0.5
+
+meta        CUST_BAYES_FMO          __CUST_BAYES && FORGED_MUA_OUTLOOK
+score       CUST_BAYES_FMO          0.5
+
+meta        CUST_BAYES_MHO          __CUST_BAYES && MIME_HTML_ONLY
+score       CUST_BAYES_MHO          0.5
+
+meta        CUST_BAYES_OTA          __CUST_BAYES && OBFU_TEXT_ATTACH
+score       CUST_BAYES_OTA          0.5
+
+meta        CUST_BAYES_SAC          __CUST_BAYES && SUBJ_ALL_CAPS
+score       CUST_BAYES_SAC          0.5
+
+meta        CUST_BAYES_MOI          __CUST_BAYES && MSGID_OUTLOOK_INVALID
+score       CUST_BAYES_MOI          0.5
+
+meta        CUST_BAYES_SR           __CUST_BAYES && SORTED_RECIPS
+score       CUST_BAYES_SR           0.5
+
+meta        CUST_BAYES_XMOCAC8F     __CUST_BAYES && XMAILER_MIMEOLE_OL_CAC8F
+score       CUST_BAYES_XMOCAC8F     0.5
+
+meta        CUST_BAYES_SHS          __CUST_BAYES && SPF_HELO_SOFTFAIL
+score       CUST_BAYES_SHS          0.75
+
+meta        CUST_BAYES_NRDH         __CUST_BAYES && NO_RDNS_DOTCOM_HELO
+score       CUST_BAYES_NRDH         0.5
+
+meta        CUST_BAYES_XMO91287     __CUST_BAYES && XMAILER_MIMEOLE_OL_91287
+score       CUST_BAYES_XMO91287     0.5
+
+meta        CUST_BAYES_FR           __CUST_BAYES && FREEMAIL_REPLYTO 
+score       CUST_BAYES_FR           0.5
+
+meta        CUST_BAYES_ND           __CUST_BAYES && NA_DOLLARS 
+score       CUST_BAYES_ND           0.5
+
+meta        CUST_BAYES_RFHD         __CUST_BAYES && RCVD_FAKE_HELO_DOTCOM
+score       CUST_BAYES_RFHD         0.5
+
+meta        CUST_BAYES_XMO3AC1D     __CUST_BAYES && XMAILER_MIMEOLE_OL_3AC1D
+score       CUST_BAYES_XMO3AC1D     0.5
+
+meta        CUST_BAYES_FCL          __CUST_BAYES && FB_CIALIS_LEO3
+score       CUST_BAYES_FCL          0.5
+
+meta        CUST_BAYES_FAV          __CUST_BAYES && FR_ALMOST_VIAG2
+score       CUST_BAYES_FAV          0.5
+
+meta        CUST_BAYES_HDH          __CUST_BAYES && HELO_DYNAMIC_HCC 
+score       CUST_BAYES_HDH          0.5
+
+meta        CUST_BAYES_HDI          __CUST_BAYES && HELO_DYNAMIC_IPADDR
+score       CUST_BAYES_HDI          0.75
+
+meta        CUST_BAYES_LIS          __CUST_BAYES && LOCALPART_IN_SUBJECT
+score       CUST_BAYES_LIS          0.75
+
+meta        CUST_BAYES_RIBSN        __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET 
+score       CUST_BAYES_RIBSN        1.0
+
+meta        CUST_BAYES_RAZORE8_WSSURBL  __CUST_BAYES && RAZOR2_CF_RANGE_E8_51_100 && URIBL_WS_SURBL
+score       CUST_BAYES_RAZORE8_WSSURBL  1.5
+
+meta        CUST_BAYES_FFR          __CUST_BAYES && FREEMAIL_FORGED_REPLYTO
+score       CUST_BAYES_FFR          0.5
+
+meta        CUST_BAYES_FRED         __CUST_BAYES && FREEMAIL_REPLYTO_END_DIGIT
+score       CUST_BAYES_FRED         0.5
+
+meta        CUST_BAYES_UB_WSSURBL    __CUST_BAYES && URIBL_BLACK && URIBL_WS_SURBL
+score       CUST_BAYES_UB_WSSURBL    1.5
+
+meta        CUST_BAYES_HDI2         __CUST_BAYES && HELO_DYNAMIC_IPADDR2
+score       CUST_BAYES_HDI2         0.5
+
+meta        CUST_BAYES_SCOM2COM     __CUST_BAYES && SPOOF_COM2COM
+score       CUST_BAYES_SCOM2COM     0.5
+
+meta        CUST_BAYES_SCOM2OTH     __CUST_BAYES && SPOOF_COM2OTH
+score       CUST_BAYES_SCOM2OTH     0.5
+
+meta        CUST_BAYES_DRITC        __CUST_BAYES && DOS_RCVD_IP_TWICE_C
+score       CUST_BAYES_DRITC        0.5
+
+meta        CUST_BAYES_MHCO         __CUST_BAYES && MIME_HEADER_CTYPE_ONLY 
+score       CUST_BAYES_MHCO         0.25
+
+meta        CUST_BAYES_FRC          __CUST_BAYES && FAKE_REPLY_C
+score       CUST_BAYES_FRC          0.5
+
+meta        CUST_BAYES_SPAMCOP_PYZOR   __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && PYZOR_CHECK
+score       CUST_BAYES_SPAMCOP_PYZOR   0.5
+
+meta        CUST_BAYES_DIF          __CUST_BAYES && DATE_IN_FUTURE_12_24
+score       CUST_BAYES_DIF          0.5
+
+meta        CUST_BAYES_RIBL         __CUST_BAYES && RCVD_IN_BRBL_LASTEXT
+score       CUST_BAYES_RIBL         1.0
+
+meta        CUST_BAYES_RIX          __CUST_BAYES && RCVD_IN_XBL
+score       CUST_BAYES_RIX          0.75
+
+meta        CUST_BAYES_RIP          __CUST_BAYES && RCVD_IN_PBL
+score       CUST_BAYES_RIP          0.75
+
+meta        CUST_BAYES_RIPS         __CUST_BAYES && RCVD_IN_PSBL
+score       CUST_BAYES_RIPS         0.5
+
+meta        CUST_BAYES_RIRR         __CUST_BAYES && RCVD_IN_RP_RNBL
+score       CUST_BAYES_RIRR         0.75
+
+meta        CUST_BAYES_OE_RIBL_RIBSN  __CUST_BAYES && DOS_OE_TO_MX && RCVD_IN_BRBL_LASTEXT && RCVD_IN_BL_SPAMCOP_NET
+score       CUST_BAYES_OE_RIBL_RIBSN 1.25
+
+meta        CUST_BAYES_RIBSN_RIP    __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PBL
+score       CUST_BAYES_RIBSN_RIP    1.0
+
+meta        CUST_BAYES_DIP0612      __CUST_BAYES && DATE_IN_PAST_06_12
+score       CUST_BAYES_DIP0612      0.5
+
+meta        CUST_BAYES_RIBL_RIP     __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PBL
+score       CUST_BAYES_RIBL_RIP     0.75
+
+meta        CUST_BAYES_DCC_LIS_MF   __CUST_BAYES && CUST_BAYES_DCC && LOCALPART_IN_SUBJECT && MAY_BE_FORGED
+score       CUST_BAYES_DCC_LIS_MF   0.75
+
+meta        CUST_BAYES_RIBL_RDNSD   __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RDNS_DYNAMIC
+score       CUST_BAYES_RIBL_RDNSD   0.75
+
+meta        CUST_BAYES_RIBL_RIRR    __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RCVD_IN_RP_RNBL
+score       CUST_BAYES_RIBL_RIRR    1.00
+
+meta        CUST_BAYES_DOTM_RIP     __CUST_BAYES && DOS_OE_TO_MX && RCVD_IN_PBL
+score       CUST_BAYES_DOTM_RIP     1.00
+
+meta        CUST_BAYES_HO2030       __CUST_BAYES && HTML_OBFUSCATE_20_30
+score       CUST_BAYES_HO2030       1.0
+
+meta        CUST_BAYES_PYZOR_RIBL   __CUST_BAYES && PYZOR_CHECK && RCVD_IN_BRBL_LASTEXT
+score       CUST_BAYES_PYZOR_RIBL   0.5
+
+meta        CUST_BAYES_PYZOR_PBL    __CUST_BAYES && PYZOR_CHECK && RCVD_IN_PBL
+score       CUST_BAYES_PYZOR_PBL    0.5
+
+meta        CUST_BAYES_PYZOR_DCC    __CUST_BAYES && PYZOR_CHECK && DCC_CHECK
+score       CUST_BAYES_PYZOR_DCC    0.5
+
+meta        CUST_BAYES_PYZOR_UB  __CUST_BAYES && PYZOR_CHECK && URIBL_BLACK
+score       CUST_BAYES_PYZOR_UB  0.5
+
+meta        CUST_BAYES_RIBSN_RIRR   __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_RP_RNBL
+score       CUST_BAYES_RIBSN_RIRR   1.0
+
+meta        CUST_BAYES_RIBSN_KRM    __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && KB_RATWARE_MSGID 
+score       CUST_BAYES_RIBSN_KRM    0.5
+
+meta        CUST_BAYES_RIBSN_KRM    __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && KB_RATWARE_MSGID 
+score       CUST_BAYES_RIBSN_KRM    0.5
+
+meta        CUST_BAYES_RIP_KRM      __CUST_BAYES && RCVD_IN_PBL && KB_RATWARE_MSGID 
+score       CUST_BAYES_RIP_KRM      0.5
+
+meta        CUST_BAYES_HIO_RIBSN    __CUST_BAYES && HTML_IMAGE_ONLY_12 && RCVD_IN_BL_SPAMCOP_NET 
+score       CUST_BAYES_HIO_RIBSN    0.25
+
+meta        CUST_BAYES_HIO_RIP      __CUST_BAYES && HTML_IMAGE_ONLY_12 && RCVD_IN_PBL 
+score       CUST_BAYES_HIO_RIP      0.25
+
+meta        CUST_BAYES_HIO_RIX      __CUST_BAYES && HTML_IMAGE_ONLY_12 && RCVD_IN_XBL 
+score       CUST_BAYES_HIO_RIX      0.25
+
+meta        CUST_BAYES_DOTMI_RIBSN  __CUST_BAYES && DOS_OE_TO_MX_IMAGE && RCVD_IN_BL_SPAMCOP_NET 
+score       CUST_BAYES_DOTMI_RIBSN  0.25
+
+meta        CUST_BAYES_DOTMI_RIP    __CUST_BAYES && DOS_OE_TO_MX_IMAGE && RCVD_IN_PBL 
+score       CUST_BAYES_DOTMI_RIP    0.25
+
+meta        CUST_BAYES_DOTMI_RIX    __CUST_BAYES && DOS_OE_TO_MX_IMAGE && RCVD_IN_XBL 
+score       CUST_BAYES_DOTMI_RIX    0.25
+
+meta        CUST_BAYES_EMT_RIBSN    __CUST_BAYES && EXTRA_MPART_TYPE && RCVD_IN_BL_SPAMCOP_NET
+score       CUST_BAYES_EMT_RIBSN    0.25
+
+meta        CUST_BAYES_EMT_RIP      __CUST_BAYES && EXTRA_MPART_TYPE && RCVD_IN_PBL
+score       CUST_BAYES_EMT_RIP      0.25
+
+meta        CUST_BAYES_EMT_RIX      __CUST_BAYES && EXTRA_MPART_TYPE && RCVD_IN_XBL
+score       CUST_BAYES_EMT_RIX      0.25
+
+meta        CUST_BAYES_RIBL_RIBSN   __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RCVD_IN_BL_SPAMCOP_NET
+score       CUST_BAYES_RIBL_RIBSN   1.0
+
+meta        CUST_BAYES_TNBD         __CUST_BAYES && TO_NO_BRKTS_DIRECT
+score       CUST_BAYES_TNBD         0.25
+
+meta        CUST_BAYES_TNBNH        __CUST_BAYES && TO_NO_BRKTS_NORDNS_HTML
+score       CUST_BAYES_TNBNH        0.25
+
+meta        CUST_BAYES_TNBN         __CUST_BAYES && TO_NO_BRKTS_NOTLIST
+score       CUST_BAYES_TNBN         0.25
+
+meta        CUST_BAYES_RIBSN_DOTM   __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && DOS_OE_TO_MX 
+score       CUST_BAYES_RIBSN_DOTM   1.0
+
+meta        CUST_BAYES_DCC_PYZOR    __CUST_BAYES && DCC_CHECK && PYZOR_CHECK
+score       CUST_BAYES_DCC_PYZOR    1.0
+
+meta        CUST_BAYES_RIX_KRM      __CUST_BAYES && RCVD_IN_XBL && KB_RATWARE_MSGID 
+score       CUST_BAYES_RIX_KRM      0.25
+
+meta        CUST_BAYES_RIX_RIP      __CUST_BAYES && RCVD_IN_XBL && RCVD_IN_PBL 
+score       CUST_BAYES_RIX_RIP      0.25
+
+meta        CUST_BAYES_DOTM_RIRR    __CUST_BAYES && DOS_OE_TO_MX && RCVD_IN_RP_RNBL
+score       CUST_BAYES_DOTM_RIRR    0.5
+
+meta        CUST_BAYES_RIBSN_RIX    __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_XBL
+score       CUST_BAYES_RIBSN_RIX    1.0
+
+meta        CUST_BAYES_RIBSN_RD     __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RDNS_DYNAMIC 
+score       CUST_BAYES_RIBSN_RD     0.25
+
+meta        CUST_BAYES_RIP_RD       __CUST_BAYES && RCVD_IN_PBL && RDNS_DYNAMIC
+score       CUST_BAYES_RIP_RD       0.25
+
+meta        CUST_BAYES_RIX_RD       __CUST_BAYES && RCVD_IN_XBL && RDNS_DYNAMIC 
+score       CUST_BAYES_RIX_RD       0.25
+
+meta        CUST_BAYES_DOTM_RIX     __CUST_BAYES && DOS_OE_TO_MX && RCVD_IN_XBL
+score       CUST_BAYES_DOTM_RIX     0.25
+
+meta        CUST_BAYES_DIF96Q       __CUST_BAYES && DATE_IN_FUTURE_96_Q
+score       CUST_BAYES_DIF96Q       0.25
+
+meta        CUST_BAYES_DOTM_FRC     __CUST_BAYES && DOS_OE_TO_MX && FAKE_REPLY_C
+score       CUST_BAYES_DOTM_FRC     0.25
+
+meta        CUST_BAYES_RIRR_FRC     __CUST_BAYES && RCVD_IN_RP_RNBL && FAKE_REPLY_C
+score       CUST_BAYES_RIRR_FRC     0.25
+
+meta        CUST_BAYES_RIX_FRC     __CUST_BAYES && RCVD_IN_XBL && FAKE_REPLY_C
+score       CUST_BAYES_RIX_FRC      0.25
+
+meta        CUST_BAYES_RIBSN_FRC     __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && FAKE_REPLY_C
+score       CUST_BAYES_RIBSN_FRC    0.25
+
+meta        CUST_BAYES_RIBL_DCC     __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && DCC_CHECK
+score       CUST_BAYES_RIBL_DCC     0.25
+
+meta        CUST_BAYES_RIP_DCC     __CUST_BAYES && RCVD_IN_PBL && DCC_CHECK
+score       CUST_BAYES_RIP_DCC      0.25
+
+meta        CUST_BAYES_RN_RIBL     __CUST_BAYES && RDNS_NONE && RCVD_IN_BRBL_LASTEXT
+score       CUST_BAYES_RN_RIBL      0.25
+
+meta        CUST_BAYES_RN_RIP     __CUST_BAYES && RDNS_NONE RCVD_IN_PBL
+score       CUST_BAYES_RN_RIP       0.25
+
+meta        CUST_BAYES_RN_RIBSN     __CUST_BAYES && RDNS_NONE && RCVD_IN_BL_SPAMCOP_NET
+score       CUST_BAYES_RN_RIBSN     0.25
+
+meta        CUST_BAYES_DOTM_SHS     __CUST_BAYES && DOS_OE_TO_MX && SPF_HELO_SOFTFAIL
+score       CUST_BAYES_DOTM_SHS     0.25
+
+meta        CUST_BAYES_RIBL_SHS     __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && SPF_HELO_SOFTFAIL
+score       CUST_BAYES_RIBL_SHS     0.25
+
+meta        CUST_BAYES_RIP_SHS      __CUST_BAYES && RCVD_IN_PBL && SPF_HELO_SOFTFAIL
+score       CUST_BAYES_RIP_SHS      0.25
+
+meta        CUST_BAYES_DOTM_RIBL    __CUST_BAYES && DOS_OE_TO_MX && RCVD_IN_BRBL_LASTEXT
+score       CUST_BAYES_DOTM_RIBL    0.25
+
+meta    CUST_BAYES_RIBL_RIPS    __CUST_BAYES && RCVD_IN_BRBL_LASTEXT && RCVD_IN_PSBL
+score   CUST_BAYES_RIBL_RIPS    0.40
+
+meta    CUST_BAYES_RIBSN_RIPS   __CUST_BAYES && RCVD_IN_BL_SPAMCOP_NET && RCVD_IN_PSBL
+score   CUST_BAYES_RIBSN_RIPS   0.40
+
+meta    CUST_BAYES_RIRR_RIPS    __CUST_BAYES && RCVD_IN_RP_RNBL && RCVD_IN_PSBL
+score   CUST_BAYES_RIRR_RIPS    0.40
+
+meta    CUST_BAYES_RIX_RIPS     __CUST_BAYES && RCVD_IN_XBL && RCVD_IN_PSBL
+score   CUST_BAYES_RIX_RIPS     0.40
+
+meta    CUST_BAYES_RDNS_RIPS    __CUST_BAYES && RDNS_NONE && RCVD_IN_PSBL
+score   CUST_BAYES_RDNS_RIPS    0.40
+
+meta    CUST_BAYES_TOC_RIBSN    __CUST_BAYES && TO_ONE_CHAR && RCVD_IN_BL_SPAMCOP_NET  
+score   CUST_BAYES_TOC_RIBSN    0.2
+meta    CUST_BAYES_TOC_RIBL    __CUST_BAYES && TO_ONE_CHAR && RCVD_IN_BRBL_LASTEXT 
+score   CUST_BAYES_TOC_RIBL     0.2
+meta    CUST_BAYES_TOC_RIP    __CUST_BAYES && TO_ONE_CHAR && RCVD_IN_PBL 
+score   CUST_BAYES_TOC_RIP      0.2
+meta    CUST_BAYES_TOC_RDNS    __CUST_BAYES && TO_ONE_CHAR && RDNS_NONE 
+score   CUST_BAYES_TOC_RDNS     0.2
+
+meta    CUST_CFH_DCC            CHARSET_FARAWAY_HEADER && DCC_CHECK 
+score   CUST_CFH_DCC            0.2
+
+meta    CUST_EM_MS              MISSING_SUBJECT && EMPTY_MESSAGE
+score   CUST_EM_MS              1.0
+
+meta    CUST_TMT_UB             UNCLOSED_BRACKET && TT_MSGID_TRUNC
+score   CUST_TMT_UB             1.0
+
+meta    CUST_FFRL_RDIS          FH_FAKE_RCVD_LINE && RCVD_DOUBLE_IP_SPAM
+score   CUST_FFRL_RDIS          1.0
+
+meta    CUST_MH_EM              EMPTY_MESSAGE && MISSING_HEADERS
+score   CUST_MH_EM              1.0
+
+meta    CUST_MS_HRF             MISSING_SUBJECT && HK_RANDOM_FROM
+score   CUST_MS_HRF             0.2
+
+meta    CUST_EM_UB              EMPTY_MESSAGE && UNCLOSED_BRACKET
+score   CUST_EM_UB              0.2
+
+meta    CUST_FHBI1_RNH          FSL_HELO_BARE_IP_1 && RCVD_NUMERIC_HELO
+score   CUST_FHBI1_RNH          0.2
+
+meta    CUST_KROM_HFFB          KB_RATWARE_OUTLOOK_MID && HTML_FONT_FACE_BAD 
+score   CUST_KROM_HFFB          0.2
+
+meta    CUST_MCF_DCC            MIME_CHARSET_FARAWAY && DCC_CHECK
+score   CUST_MCF_DCC            0.2
+
+meta    CUST_MCF_RDNS           MIME_CHARSET_FARAWAY && RDNS_NONE
+score   CUST_MCF_RDNS           0.2
+
+meta    CUST_CFH_RDNS           CHARSET_FARAWAY_HEADER && RDNS_NONE
+score   CUST_CFH_RDNS           0.2
+
+meta    CUST_DIP_UDS            DATE_IN_PAST && URIBL_DBL_SPAM
+score   CUST_DIP_UDS            0.2
+    
+meta    CUST_CFH_PC             CHARSET_FARAWAY_HEADER && PYZOR_CHECK
+score   CUST_CFH_PC             0.2
+
+meta    CUST_BAYES_DIP_12_24    __CUST_BAYES && DATE_IN_PAST_12_24 
+score   CUST_BAYES_DIP_12_24    0.2
+
+meta    CUST_DIP_12_24_DC       DATE_IN_PAST_12_24 && DCC_CHECK 
+score   CUST_DIP_12_24_DC       0.2
+
+meta    CUST_DIP_12_24_UB       DATE_IN_PAST_12_24 && URIBL_BLACK 
+score   CUST_DIP_12_24_UB       0.2
+
+meta    CUST_BAYES_DIP_06_12    __CUST_BAYES && DATE_IN_PAST_06_12 
+score   CUST_BAYES_DIP_06_12    0.2
+
+meta    CUST_DIP_06_12_DC       DATE_IN_PAST_06_12 && DCC_CHECK 
+score   CUST_DIP_06_12_DC       0.2
+
+meta    CUST_DIP_06_12_UB       DATE_IN_PAST_06_12 && URIBL_BLACK 
+score   CUST_DIP_06_12_UB       0.2
+
+meta    CUST_BAYES_EM           __CUST_BAYES && EMPTY_MESSAGE 
+score   CUST_BAYES_EM           0.2
+
+meta    CUST_BAYES_FHBI1        __CUST_BAYES && FSL_HELO_BARE_IP_1 
+score   CUST_BAYES_FHBI1        0.2
+
+meta    CUST_BAYES_MH           __CUST_BAYES && MISSING_HEADERS
+score   CUST_BAYES_MH           0.2
+
+meta    CUST_BAYES_MS           __CUST_BAYES && MISSING_SUBJECT
+score   CUST_BAYES_MS           0.2
+
+meta    CUST_BAYES_RNH          __CUST_BAYES && RCVD_NUMERIC_HELO  
+score   CUST_BAYES_RNH          0.2
+
+meta    CUST_MH_MS              MISSING_HEADERS && MISSING_SUBJECT
+score   CUST_MH_MS              0.2
+
+meta    CUST_EM_FHBI1           EMPTY_MESSAGE && FSL_HELO_BARE_IP_1 
+score   CUST_EM_FHBI1           0.2
+
+meta    CUST_EM_RNH             EMPTY_MESSAGE && RCVD_NUMERIC_HELO  
+score   CUST_EM_RNH             0.2
+
+shortcircuit NO_RELAYS ham
+score NO_RELAYS -6

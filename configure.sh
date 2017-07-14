@@ -13,5 +13,8 @@ chmod 600 /root/.ssh/authorized_keys
 cp postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
 
-cp mailscanner /etc/MailScanner
+yum install -y spamassassin
+
+cp -pr mailscanner/* /etc/MailScanner
+cp -pr mail/* /etc/mail/spamassassin/
 systemctl restart mailscanner
