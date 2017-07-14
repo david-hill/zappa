@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp
 
 mkdir -p /var/lib/imap/sieve/d/dhill/
 cp sieve/* /var/lib/imap/sieve/d/dhill/
