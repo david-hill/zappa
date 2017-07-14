@@ -9,3 +9,6 @@ systemctl restart cyrus-imapd
 
 cp ssh/* /root/.ssh/
 chmod 600 /root/.ssh/authorized_keys
+
+cp postfix/* /etc/postfix
+postmap /etc/postfix/header_checks
