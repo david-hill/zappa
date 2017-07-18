@@ -30,3 +30,6 @@ systemctl restart nut-server
 
 systemctl enable named
 systemctl restart named
+
+cp mysql/my.cnf /etc
+systemctl restart mariadb
