@@ -33,3 +33,6 @@ systemctl restart named
 
 cp mysql/my.cnf /etc
 systemctl restart mariadb
+
+cp sysconfig/* /etc/sysconfig
+systemctl restart named
