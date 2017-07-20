@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server
 
 mkdir -p /var/lib/imap/sieve/d/dhill/
 cp sieve/* /var/lib/imap/sieve/d/dhill/
@@ -36,3 +36,7 @@ systemctl restart mariadb
 
 cp sysconfig/* /etc/sysconfig
 systemctl restart named
+
+cp dhcp/dhcpd/* /etc/dhcp
+systemctl enable dhcpd
+systemctl restart dhcpd
