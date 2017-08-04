@@ -991,5 +991,8 @@ score   CUST_TO_SALES_PYZOR     1.0
 meta    CUST_TO_SALES_DBL       CUST_TO_SALES && URIBL_DBL_SPAM
 score   CUST_TO_SALES_DBL       1.0
 
+meta    CUST_TO_SALES_BAYES     CUST_TO_SALES && __CUST_BAYES
+score   CUST_TO_SALES_BAYES     1.0
+
 shortcircuit NO_RELAYS ham
 score NO_RELAYS -6
