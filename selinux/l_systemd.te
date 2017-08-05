@@ -1,11 +1,16 @@
-policy_module(l_systemd,0.0.1)
+policy_module(l_systemd,0.0.2)
 
 require {
+	type chkpwd_t;
   type init_var_run_t;
   type systemd_machined_t;
+	type systemd_logind_t;
   class service { start status };
+	class capability dac_read_search;
 }
 
 #============= systemd_machined_t ==============
 allow systemd_machined_t init_var_run_t:service { start status };
+allow systemd_logind_t self:capability dac_read_search;
+allow chkpwd_t self:capability dac_read_search;
 

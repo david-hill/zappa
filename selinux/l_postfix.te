@@ -1,4 +1,4 @@
-policy_module(l_postfix,0.0.3)
+policy_module(l_postfix,0.0.5)
 
 require {
   type postfix_pickup_t;
@@ -10,6 +10,7 @@ require {
   type postfix_spool_t;
   class dir remove_name;
   class file { lock rename setattr unlink write };
+	class capability dac_read_search;
 }
 
 fs_read_tmpfs_symlinks(postfix_pickup_t)
@@ -20,4 +21,4 @@ fs_read_tmpfs_symlinks(postfix_smtpd_t)
 allow mscan_t postfix_spool_t:dir remove_name;
 allow mscan_t postfix_spool_t:file { lock rename setattr unlink write };
 postfix_rw_public_pipes(mscan_t)
-
+allow postfix_smtpd_t self:capability dac_read_search;
