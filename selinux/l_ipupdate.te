@@ -1,0 +1,10 @@
+policy_module(l_ipupdate,0.0.3)
+
+require {
+  type init_t;
+}
+
+files_read_var_files(init_t)
+corenet_tcp_connect_http_port(init_t)
+files_manage_var_files(init_t)
+

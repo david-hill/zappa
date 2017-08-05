@@ -1,0 +1,23 @@
+policy_module(l_postfix,0.0.3)
+
+require {
+  type postfix_pickup_t;
+  type postfix_local_t;
+  type postfix_smtp_t;
+  type postfix_cleanup_t;
+  type postfix_smtpd_t;
+  type mscan_t;
+  type postfix_spool_t;
+  class dir remove_name;
+  class file { lock rename setattr unlink write };
+}
+
+fs_read_tmpfs_symlinks(postfix_pickup_t)
+fs_read_tmpfs_symlinks(postfix_cleanup_t)
+fs_read_tmpfs_symlinks(postfix_local_t)
+fs_read_tmpfs_symlinks(postfix_smtp_t)
+fs_read_tmpfs_symlinks(postfix_smtpd_t)
+allow mscan_t postfix_spool_t:dir remove_name;
+allow mscan_t postfix_spool_t:file { lock rename setattr unlink write };
+postfix_rw_public_pipes(mscan_t)
+

@@ -1,0 +1,7 @@
+policy_module(l_fetchmail,0.0.1)
+
+require {
+  type fetchmail_t;
+}
+
+mta_delete_spool(fetchmail_t)

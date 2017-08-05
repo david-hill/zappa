@@ -1,0 +1,13 @@
+policy_module(l_antivirus,0.0.1)
+
+require {
+  type antivirus_t;
+  type mscan_tmp_t;
+  class dir { add_name create remove_name rmdir setattr write };
+  class file { create unlink write };
+}
+
+#============= antivirus_t ==============
+allow antivirus_t mscan_tmp_t:dir { add_name create remove_name rmdir setattr write };
+allow antivirus_t mscan_tmp_t:file { create unlink write };
+

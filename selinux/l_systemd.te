@@ -1,0 +1,11 @@
+policy_module(l_systemd,0.0.1)
+
+require {
+  type init_var_run_t;
+  type systemd_machined_t;
+  class service { start status };
+}
+
+#============= systemd_machined_t ==============
+allow systemd_machined_t init_var_run_t:service { start status };
+

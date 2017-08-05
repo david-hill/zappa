@@ -1,0 +1,10 @@
+policy_module(l_dhcp,0.0.1)
+
+require {
+  type dhcpd_t;
+  class capability fowner;
+}
+
+#============= dhcpd_t ==============
+allow dhcpd_t self:capability fowner;
+

@@ -1,0 +1,8 @@
+policy_module(l_qemu,0.0.1)
+require {
+	type svirt_t;
+}
+
+#============= svirt_t ==============
+virt_systemctl(svirt_t)
+

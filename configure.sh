@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel
 
 mkdir -p /var/lib/imap/sieve/d/dhill/
 cp sieve/* /var/lib/imap/sieve/d/dhill/
@@ -40,3 +40,10 @@ systemctl restart named
 cp dhcp/dhcpd/* /etc/dhcp
 systemctl enable dhcpd
 systemctl restart dhcpd
+
+cp selinux/* /usr/share/selinux/devel
+modules=$(find /usr/share/selinux/devel -name \*.pp)
+for module in $(modules); do
+  semodule -i $module
+done
+

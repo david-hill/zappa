@@ -1,0 +1,10 @@
+policy_module(l_pyzor,0.0.1)
+
+require {
+        type mscan_t;
+        class process setsched;
+}
+
+#============= mscan_t ==============
+allow mscan_t self:process setsched;
+

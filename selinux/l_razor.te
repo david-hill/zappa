@@ -1,0 +1,5 @@
+policy_module(l_razor,0.0.1)
+require {
+  type mscan_t;
+}
+corenet_tcp_connect_razor_port(mscan_t)
