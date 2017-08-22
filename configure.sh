@@ -2,6 +2,16 @@
 
 yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel
 
+
+wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
+cd dcc-1.3.159
+./configure
+make
+make install
+cd ..
+rm -rf dcc.tar.Z
+rm -rf dcc-1.3.159
+
 mkdir -p /var/lib/imap/sieve/d/dhill/
 cp sieve/* /var/lib/imap/sieve/d/dhill/
 chmod 755 /var/lib/imap/sieve/d/dhill/sieve
