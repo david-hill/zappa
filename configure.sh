@@ -1,9 +1,9 @@
 #!/bin/bash
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel
-
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc
 
 wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
+tar xvf dcc.tar.Z
 cd dcc-1.3.159
 ./configure
 make
