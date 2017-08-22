@@ -21,7 +21,7 @@
 # DCC is disabled here because it is not open source.  See the DCC
 # license for more details.
 #
-#loadplugin Mail::SpamAssassin::Plugin::DCC
+loadplugin Mail::SpamAssassin::Plugin::DCC
 
 # Pyzor - perform Pyzor message checks.
 #
