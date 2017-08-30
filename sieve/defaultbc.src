@@ -10,7 +10,7 @@ if header :matches "Subject" ["*YOUR CareerAlert*"] {
   fileinto "Cron";
 } elsif header :matches "Subject" ["Anacron job*"] {
   fileinto "Cron";
-} elsif header :matches "Subject" ["BANNED contents from you"] {
+} elsif header :matches "Subject" ["BANNED contents from you*"] {
   fileinto "Virus";
 } elsif address :matches "to" "sales@*" {
   fileinto "Junk";
