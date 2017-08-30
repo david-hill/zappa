@@ -1,27 +1,27 @@
 require ["fileinto"];
 
 if header :matches "Subject" ["*YOUR CareerAlert*"] { 
-    fileinto "Workopolis";
+  fileinto "Workopolis";
 } elsif header :matches "Subject" ["*Poste :*"] { 
-    fileinto "Jobboom";
+  fileinto "Jobboom";
 } elsif header :matches "Subject" ["{Spam*","Virus Detected"] {
-      fileinto "Junk";
+  fileinto "Junk";
 } elsif header :matches "Subject" ["Cron <*"] {
-      fileinto "Cron";
+  fileinto "Cron";
 } elsif header :matches "Subject" ["Anacron job*"] {
-      fileinto "Cron";
+  fileinto "Cron";
 } elsif header :matches "Subject" ["BANNED contents from you"] {
-      fileinto "Virus";
+  fileinto "Virus";
 } elsif address :matches "to" "sales@*" {
-    fileinto "Junk";
+  fileinto "Junk";
 } elsif address :matches "to" "zoehill@*" {
-    fileinto "Zoe";
+  fileinto "Zoe";
 } elsif address :matches "to" "miahill@*" {
-    fileinto "Mia";
+  fileinto "Mia";
 } elsif address :matches "to" "milo@*" {
-    fileinto "Milo";
+  fileinto "Milo";
 } elsif address :matches "to" "piscine@*" {
-    fileinto "Piscine";
+  fileinto "Piscine";
 } else {
-     keep;
+  keep;
 }
