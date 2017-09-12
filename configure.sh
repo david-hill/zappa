@@ -59,3 +59,7 @@ done
 
 cp usr/lib/systemd/system/* /usr/lib/systemd/system
 systemctl daemon-reload
+
+systemctl disable rngd.service
+
+systemctl reset-failed
