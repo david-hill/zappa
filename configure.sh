@@ -57,3 +57,5 @@ for module in $(modules); do
   semodule -i $module
 done
 
+cp usr/lib/systemd/system/* /usr/lib/systemd/system
+systemctl daemon-reload
