@@ -1,4 +1,4 @@
-policy_module(l_dccproc,0.0.1)
+policy_module(l_dccproc,0.0.2)
 
 require {
 	type dcc_var_t;
@@ -10,4 +10,5 @@ require {
 #============= mscan_t ==============
 allow mscan_t dcc_client_map_t:file { getattr lock map open read write };
 allow mscan_t dcc_var_t:file { getattr lock map open read write };
+dcc_stream_connect_dccifd(mscan_t)
 
