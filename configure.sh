@@ -33,8 +33,9 @@ systemctl restart postfix
 systemctl disable chronyd
 systemctl stop chronyd
 
+cp etc/* /etc
 systemctl enable ntpd
-systemctl stop ntpd
+systemctl restart ntpd
 
 cp -pr mailscanner/* /etc/MailScanner
 cp -pr mail/* /etc/mail/spamassassin/
