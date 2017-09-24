@@ -30,6 +30,11 @@ postmap /etc/postfix/header_checks
 systemctl enable postfix
 systemctl restart postfix
 
+systemctl disable chronyd
+systemctl stop chronyd
+
+systemctl enable ntpd
+systemctl stop ntpd
 
 cp -pr mailscanner/* /etc/MailScanner
 cp -pr mail/* /etc/mail/spamassassin/
