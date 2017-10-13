@@ -19,7 +19,12 @@ firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT_direct 0 -i virbr
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT_direct 0 -i virbr0 -m udp -p udp --dport 623 -j ACCEPT 
 firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT_direct 0 -i eno1 -m udp -p udp --source 10.0.0.0/8 --dport 68 -j ACCEPT 
 firewall-cmd --permanent --zone=external --add-forward-port=port=2235:proto=tcp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=26885:proto=tcp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=26885:proto=udp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=16946:proto=tcp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=2236:proto=tcp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=2235:proto=udp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=2236:proto=udp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=51413:proto=tcp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=internal --add-port=8080/tcp
 firewall-cmd --permanent --zone=internal --add-port=16509/tcp
