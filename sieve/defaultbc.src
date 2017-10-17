@@ -20,7 +20,7 @@ if header :matches "Subject" ["*YOUR CareerAlert*"] {
   fileinto "Mia";
 } elsif address :matches "to" "milo@*" {
   fileinto "Milo";
-} elsif address :matches "to" "piscine@*" {
+} elsif address :matches "to" "piscinehill@*" {
   fileinto "Piscine";
 } else {
   keep;
