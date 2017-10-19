@@ -71,3 +71,6 @@ systemctl daemon-reload
 systemctl disable rngd.service
 
 systemctl reset-failed
+
+mkdir -p /usr/src/kernels/linux-stable
+cp kernel/* /usr/src/kernels/linux-stable
