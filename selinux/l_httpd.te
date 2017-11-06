@@ -1,4 +1,4 @@
-policy_module(l_httpd,0.0.1)
+policy_module(l_httpd,0.0.3)
 
 require {
 	type httpd_t;
@@ -8,3 +8,5 @@ require {
 
 #============= httpd_t ==============
 allow httpd_t httpd_sys_content_t:file map;
+libs_manage_lib_dirs(httpd_t)
+
