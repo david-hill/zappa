@@ -1,4 +1,4 @@
-policy_module(l_mailscanner,0.0.6)
+policy_module(l_mailscanner,0.0.7)
 
 require {
   type postfix_master_t;
@@ -10,7 +10,7 @@ require {
   class file { append create getattr ioctl open read rename unlink write };
   class lnk_file { getattr read };
   class dir { add_name getattr open read search write };
-  class capability { fowner fsetid };
+  class capability { dac_override fowner fsetid };
 }
 allow mscan_t postfix_spool_t:dir { add_name getattr open read search write remove_name };
 allow mscan_t postfix_spool_t:file { append create getattr ioctl open read unlink write };
@@ -20,7 +20,7 @@ mta_read_config(mscan_t)
 spamassassin_exec_client(mscan_t)
 allow init_t mscan_spool_t:dir read;
 allow mscan_t cron_var_lib_t:file { append ioctl open read rename unlink getattr };
-allow mscan_t self:capability { fowner fsetid };
+allow mscan_t self:capability { dac_override fowner fsetid };
 files_read_var_lib_files(mscan_t)
 files_manage_mounttab(mscan_t)
 files_rw_var_lib_dirs(mscan_t)
