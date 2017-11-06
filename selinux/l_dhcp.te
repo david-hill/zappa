@@ -1,10 +1,9 @@
-policy_module(l_dhcp,0.0.1)
+policy_module(l_dhcp,0.0.2)
 
 require {
   type dhcpd_t;
-  class capability fowner;
+  class capability { dac_override fowner };
 }
 
 #============= dhcpd_t ==============
-allow dhcpd_t self:capability fowner;
-
+allow dhcpd_t self:capability { dac_override fowner };
