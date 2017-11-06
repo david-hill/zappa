@@ -1,4 +1,4 @@
-policy_module(l_pyzor,0.0.1)
+policy_module(l_pyzor,0.0.2)
 
 require {
         type mscan_t;
@@ -7,4 +7,4 @@ require {
 
 #============= mscan_t ==============
 allow mscan_t self:process setsched;
-
+libs_exec_ldconfig(mscan_t)
