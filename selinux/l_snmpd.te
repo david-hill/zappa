@@ -1,0 +1,10 @@
+policy_module(l_snmpd,0.0.1)
+
+
+require {
+	type snmpd_t;
+}
+
+#============= snmpd_t ==============
+kernel_request_load_module(snmpd_t)
+

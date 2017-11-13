@@ -1,0 +1,25 @@
+policy_module(l_dbus,0.0.2)
+
+require {
+	type ftpd_t;
+	type init_t;
+	type systemd_logind_t;
+	type sshd_t;
+	type virtlogd_t;
+}
+
+#============= ftpd_t ==============
+init_dbus_chat(ftpd_t)
+
+#============= init_t ==============
+init_dbus_chat(init_t)
+
+#============= sshd_t ==============
+init_dbus_chat(sshd_t)
+
+#============= systemd_logind_t ==============
+systemd_dbus_chat_logind(systemd_logind_t)
+
+#============= virtlogd_t ==============
+systemd_dbus_chat_logind(virtlogd_t)
+
