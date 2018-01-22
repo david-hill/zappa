@@ -38,8 +38,8 @@ cp etc/* /etc
 systemctl enable ntpd
 systemctl restart ntpd
 
-cp -pr mailscanner/* /etc/MailScanner
-cp -pr mail/* /etc/mail/spamassassin/
+cp -pr etc/MailScanner/* /etc/MailScanner
+cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
 systemctl enable mailscanner
 systemctl restart mailscanner
 
