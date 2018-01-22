@@ -1,5 +1,29 @@
 #!/bin/bash
 
+function disable_stop {
+  s=$1
+  systemctl status $s | grep -q enabled
+  if [ $? -eq 0 ]; then
+    systemctl disable $s
+  fi
+  systemctl status $s | grep -q running
+  if [ $? -ne 0 ]; then
+    systemctl stop $s
+  fi
+}
+
+function enable_start {
+  s=$1
+  systemctl status $s | grep -q enabled
+  if [ $? -ne 0 ]; then
+    systemctl enable $s
+  fi
+  systemctl status $s | grep -q running
+  if [ $? -ne 0 ]; then
+    systemctl start $s
+  fi
+}
+
 yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc
 
 wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
@@ -18,8 +42,7 @@ chmod 755 /var/lib/imap/sieve/d/dhill/sieve
 
 cp etc/imapd.conf /etc/
 cp etc/cyrus.conf /etc/
-systemctl enable cyrus-imapd
-systemctl restart cyrus-imapd
+
 
 openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 3650
 
@@ -28,38 +51,13 @@ chmod 600 /root/.ssh/authorized_keys
 
 cp etc/postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
-systemctl enable postfix
-systemctl restart postfix
-
-systemctl disable chronyd
-systemctl stop chronyd
-
 cp etc/ntpd.conf /etc
-systemctl enable ntpd
-systemctl restart ntpd
-
 cp -pr etc/MailScanner/* /etc/MailScanner
 cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
-systemctl enable mailscanner
-systemctl restart mailscanner
-
 cp etc/ups/* /etc/ups
-systemctl enable nut-server
-systemctl restart nut-server
-
-systemctl enable named
-systemctl restart named
-
 cp etc/my.cnf /etc
-systemctl restart mariadb
-
 cp etc/sysconfig/* /etc/sysconfig
-systemctl restart named
-
 cp etc/dhcp/* /etc/dhcp
-systemctl enable dhcpd
-systemctl restart dhcpd
-
 cp selinux/* /usr/share/selinux/devel
 modules=$(find /usr/share/selinux/devel -name \*.pp)
 for module in $(modules); do
@@ -68,10 +66,18 @@ done
 
 cp usr/lib/systemd/system/* /usr/lib/systemd/system
 systemctl daemon-reload
-
 systemctl disable rngd.service
-
 systemctl reset-failed
 
 mkdir -p /usr/src/kernels/linux-stable
 cp kernel/* /usr/src/kernels/linux-stable
+
+enable_start nut-server
+enable_start cyrus-imapd
+enable_start postfix
+disable_stop chronyd
+disable_stop rngd
+enable_start ntpd
+enable_start mailscanner
+enable_start named
+enable_start dhcpd
