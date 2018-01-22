@@ -16,7 +16,8 @@ mkdir -p /var/lib/imap/sieve/d/dhill/
 cp sieve/* /var/lib/imap/sieve/d/dhill/
 chmod 755 /var/lib/imap/sieve/d/dhill/sieve
 
-cp cyrus/* /etc/
+cp etc/imapd.conf /etc/
+cp etc/cyrus.conf /etc/
 systemctl enable cyrus-imapd
 systemctl restart cyrus-imapd
 
