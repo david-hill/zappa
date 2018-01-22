@@ -58,7 +58,7 @@ cp etc/ups/* /etc/ups
 cp etc/my.cnf /etc
 cp etc/sysconfig/* /etc/sysconfig
 cp etc/dhcp/* /etc/dhcp
-cp /usr/share/selinux/devel/* /usr/share/selinux/devel
+cp usr/share/selinux/devel/* /usr/share/selinux/devel
 modules=$(find /usr/share/selinux/devel -name \*.pp)
 for module in $(modules); do
   semodule -i $module
@@ -66,7 +66,6 @@ done
 
 cp usr/lib/systemd/system/* /usr/lib/systemd/system
 systemctl daemon-reload
-systemctl disable rngd.service
 systemctl reset-failed
 
 mkdir -p /usr/src/kernels/linux-stable
