@@ -34,7 +34,7 @@ systemctl restart postfix
 systemctl disable chronyd
 systemctl stop chronyd
 
-cp etc/* /etc
+cp etc/ntpd.conf /etc
 systemctl enable ntpd
 systemctl restart ntpd
 
@@ -50,10 +50,10 @@ systemctl restart nut-server
 systemctl enable named
 systemctl restart named
 
-cp mysql/my.cnf /etc
+cp etc/my.cnf /etc
 systemctl restart mariadb
 
-cp sysconfig/* /etc/sysconfig
+cp etc/sysconfig/* /etc/sysconfig
 systemctl restart named
 
 cp dhcp/dhcpd/* /etc/dhcp
