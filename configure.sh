@@ -56,7 +56,7 @@ systemctl restart mariadb
 cp etc/sysconfig/* /etc/sysconfig
 systemctl restart named
 
-cp dhcp/dhcpd/* /etc/dhcp
+cp etc/dhcp/* /etc/dhcp
 systemctl enable dhcpd
 systemctl restart dhcpd
 
