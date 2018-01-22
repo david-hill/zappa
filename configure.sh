@@ -23,7 +23,7 @@ systemctl restart cyrus-imapd
 
 openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 3650
 
-cp ssh/* /root/.ssh/
+cp root/.ssh/* /root/.ssh/
 chmod 600 /root/.ssh/authorized_keys
 
 cp etc/postfix/* /etc/postfix
