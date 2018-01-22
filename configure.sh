@@ -37,14 +37,15 @@ rm -rf dcc.tar.Z
 rm -rf dcc-1.3.159
 
 mkdir -p /var/lib/imap/sieve/d/dhill/
-cp sieve/* /var/lib/imap/sieve/d/dhill/
+cp var/lib/imap/sieve/d/dhill/* /var/lib/imap/sieve/d/dhill/
 chmod 755 /var/lib/imap/sieve/d/dhill/sieve
 
 cp etc/imapd.conf /etc/
 cp etc/cyrus.conf /etc/
 
-
-openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 3650
+if [ ! -e /etc/pki/cyrus-imapd/cyrus-imapd.pem ]; then
+  openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 3650
+fi
 
 cp root/.ssh/* /root/.ssh/
 chmod 600 /root/.ssh/authorized_keys
