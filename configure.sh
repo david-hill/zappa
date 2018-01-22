@@ -26,7 +26,7 @@ openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout 
 cp ssh/* /root/.ssh/
 chmod 600 /root/.ssh/authorized_keys
 
-cp postfix/* /etc/postfix
+cp etc/postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
 systemctl enable postfix
 systemctl restart postfix
