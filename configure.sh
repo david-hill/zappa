@@ -43,7 +43,7 @@ cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
 systemctl enable mailscanner
 systemctl restart mailscanner
 
-cp ups/* /etc/ups
+cp etc/ups/* /etc/ups
 systemctl enable nut-server
 systemctl restart nut-server
 
