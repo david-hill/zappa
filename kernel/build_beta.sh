@@ -24,6 +24,13 @@ else
   force=0
 fi
 
+
+rpm -qa | grep -q flex
+if [ $? -ne 0 ]; then
+  yum install -y flex
+fi
+
+
 startlog "Building kernel"
 makearg="-j12"
 #makearg=""

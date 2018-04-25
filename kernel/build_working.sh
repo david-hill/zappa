@@ -30,20 +30,20 @@ makearg="-j12"
 git checkout Makefile 2>>$stderr 1>>$stdout
 rc=$?
 if [ $rc -eq 0 ]; then
-  git checkout master 2>>$stderr 1>>$stdout
-  rc=$?
+#  git checkout master 2>>$stderr 1>>$stdout
+  rc=0
   if [ $rc -eq 0 ]; then
-    git pull 2>>$stderr 1>>$stdout
-    rc=$?
+    #git pull 2>>$stderr 1>>$stdout
+    rc=0
     if [ $rc -eq 0 ]; then
-      gver=$(git tag | grep -v rc | grep -v 4.14 | sort -V | tail -1)
+      gver=$(git tag |  grep "v4.15-rc9" | sort -V | tail -1)
       pver=$(cat previous_working)
       if [[ $gver != $pver ]] || [ $force == 1 ]; then
-        git checkout ${gver}
-        rc=$?
+#        git checkout ${gver}
+        rc=0
         if [ $rc -eq 0 ]; then
-          git pull origin ${gver}
-          rc=$?
+          #git pull origin ${gver}
+          rc=0
           if [ $rc -eq 0 ]; then
             cdate="-"
             cdate=$cdate$(date +"%Y%m%d%H%M%S")

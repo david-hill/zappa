@@ -1,10 +1,13 @@
+type=official
+#type=internal
+
 cd /var/lib/jenkins/cloud/
 rc=$?
 if [ $rc -eq 0 ]; then
   git checkout 10.0
   rc=$?
   if [ $rc -eq 0 ]; then
-    sed -i 's/rhel=.*/rhel=7.3/g' setup.cfg.local
+    sed -i 's/rhel=.*/rhel=7.5/g' setup.cfg.local
     rc=$?
     if [ $rc -eq 0 ]; then
       sed -i 's/releasever=.*/releasever=rhosp10/g' setup.cfg.local
@@ -19,7 +22,7 @@ if [ $rc -eq 0 ]; then
             bash delete_undercloud.sh
             rc=$?
             if [ $rc -eq 0 ]; then
-              bash create_undercloud.sh official
+              bash create_undercloud.sh $type
               rc=$?
               if [ $rc -eq 0 ]; then
                 echo undercloud is up
