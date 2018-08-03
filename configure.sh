@@ -24,7 +24,7 @@ function enable_start {
   fi
 }
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server
 
 wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
 tar xvf dcc.tar.Z
@@ -72,6 +72,7 @@ systemctl reset-failed
 mkdir -p /usr/src/kernels/linux-stable
 cp kernel/* /usr/src/kernels/linux-stable
 
+enable_start tftp
 enable_start nut-server
 enable_start cyrus-imapd
 enable_start postfix
