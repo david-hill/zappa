@@ -24,7 +24,7 @@ function enable_start {
   fi
 }
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp
 
 wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
 tar xvf dcc.tar.Z
@@ -49,6 +49,9 @@ fi
 
 cp root/.ssh/* /root/.ssh/
 chmod 600 /root/.ssh/authorized_keys
+
+cp -pr /tftpboot/* /var/lib/tftpboot
+cp var/lib/tftpboot/* /var/lib/tftpboot
 
 cp etc/postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
