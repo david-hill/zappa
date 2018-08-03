@@ -38,6 +38,8 @@ firewall-cmd --permanent --zone=internal --add-port=22/tcp
 firewall-cmd --permanent --zone=internal --add-port=25/tcp
 firewall-cmd --permanent --zone=internal --add-port=67/tcp
 firewall-cmd --permanent --zone=internal --add-port=67/udp
+firewall-cmd --permanent --zone=internal --add-port=69/tcp
+firewall-cmd --permanent --zone=internal --add-port=69/udp
 firewall-cmd --permanent --zone=internal --add-port=53/tcp
 firewall-cmd --permanent --zone=internal --add-port=53/udp
 firewall-cmd --permanent --zone=internal --add-port=80/tcp
