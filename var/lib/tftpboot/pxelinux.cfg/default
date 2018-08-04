@@ -2,5 +2,5 @@ DEFAULT pxeboot
 TIMEOUT 50
 LABEL pxeboot
       KERNEL fedora/vmlinuz
-      APPEND initrd=fedora/initrd.img
+      APPEND initrd=fedora/initrd.img repo=http://dl.fedoraproject.org/pub/fedora/linux/releases/28/Workstation/x86_64/os/
 ONERROR LOCALBOOT 0
