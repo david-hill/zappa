@@ -53,8 +53,10 @@ chmod 600 /root/.ssh/authorized_keys
 cp -pr /tftpboot/* /var/lib/tftpboot
 cp var/lib/tftpboot/* /var/lib/tftpboot
 
-wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/boot.iso
-mv boot.iso /var/lib/tftpboot/fedora
+wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/initrd.img
+wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/vmlinuz
+mv initrd.img /var/lib/tftpboot/fedora
+mv vmlinuz /var/lib/tftpboot/fedora
 
 cp etc/postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
