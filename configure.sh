@@ -43,6 +43,10 @@ chmod 755 /var/lib/imap/sieve/d/dhill/sieve
 cp etc/imapd.conf /etc/
 cp etc/cyrus.conf /etc/
 
+cp etc/firewalld/firewalld.conf /etc/firewalld
+systemctl restart firewalld
+firewall-cmd --reload
+
 if [ ! -e /etc/pki/cyrus-imapd/cyrus-imapd.pem ]; then
   openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 3650
 fi
