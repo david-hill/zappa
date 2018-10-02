@@ -84,6 +84,7 @@ systemctl reset-failed
 mkdir -p /usr/src/kernels/linux-stable
 cp kernel/* /usr/src/kernels/linux-stable
 
+enable_start vbmcd
 enable_start tftp
 enable_start nut-server
 enable_start cyrus-imapd
