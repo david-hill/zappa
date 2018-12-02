@@ -14,6 +14,10 @@ if header :matches "Subject" ["*YOUR CareerAlert*"] {
   fileinto "Virus";
 } elsif address :matches "to" "sales@*" {
   fileinto "Junk";
+} elsif address :matches "to" "indeed@*" {
+  fileinto "Indeed";
+} elsif address :matches "to" "jobboom@*" {
+  fileinto "Jobboom";
 } elsif address :matches "to" "zoehill@*" {
   fileinto "Zoe";
 } elsif address :matches "to" "miahill@*" {
