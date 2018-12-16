@@ -25,7 +25,7 @@ function enable_start {
 }
 
 yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp
-debuginfo-install cyrus-imapd
+debuginfo-install cyrus-imapd libgcc
 
 wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
 tar xvf dcc.tar.Z
