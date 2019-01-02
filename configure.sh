@@ -88,6 +88,11 @@ systemctl reset-failed
 mkdir -p /usr/src/kernels/linux-stable
 cp kernel/* /usr/src/kernels/linux-stable
 
+pip list | grep -q virtualbmc
+if [ $? -ne 0 ]; then
+  pip install virtualbmc
+fi
+
 enable_start vbmcd
 enable_start tftp
 enable_start nut-server
