@@ -36,7 +36,7 @@ if [ $rc -eq 0 ]; then
   rc=$?
   if [ $rc -eq 0 ]; then
     endlog "done"
-    startlog "Compiling bzImage"
+    startlog "Compiling kernel"
     make -j12 bzImage
     rc=$?
     if [ $rc -eq 0 ]; then
