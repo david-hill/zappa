@@ -25,7 +25,8 @@ if [ $rc -eq 0 ]; then
               bash create_undercloud.sh $type
               rc=$?
               if [ $rc -eq 0 ]; then
-                bash stop_vms.sh
+                #bash stop_vms.sh
+                echo Undercloud is up.
                 rc=$?
               fi
             fi
