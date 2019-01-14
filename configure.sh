@@ -24,7 +24,7 @@ function enable_start {
   fi
 }
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned
 debuginfo-install cyrus-imapd libgcc
 debuginfo-install $( rpm -qR cyrus-imapd | awk '{ print $1 }' | grep -v rpmlib )
 
@@ -104,3 +104,6 @@ enable_start ntpd
 enable_start mailscanner
 enable_start named
 enable_start dhcpd
+enable_start tuned
+
+tuned-adm profile virtual-host
