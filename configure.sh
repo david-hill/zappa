@@ -93,6 +93,9 @@ if [ $? -ne 0 ]; then
   pip install virtualbmc
 fi
 
+mkdir /etc/virtualbmc
+cp etc/virtualbmc /etc/virtualbmc
+
 enable_start vbmcd
 enable_start tftp
 enable_start nut-server
