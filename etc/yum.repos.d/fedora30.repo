@@ -1,4 +1,4 @@
-[fedora29]
+[fedora30]
 name=Fedora 30 - x86_64
 failovermethod=priority
 #baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
