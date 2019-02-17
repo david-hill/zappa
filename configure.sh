@@ -61,6 +61,7 @@ cp -pr /tftpboot/* /var/lib/tftpboot
 cp var/lib/tftpboot/* /var/lib/tftpboot
 
 wget http://techedemic.com/wp-content/uploads/2015/10/8-07-14_MegaCLI.zip
+wget http://www.avagotech.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/8-07-14_MegaCLI.zip
 
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/initrd.img
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/vmlinuz
