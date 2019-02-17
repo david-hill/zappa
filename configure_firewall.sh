@@ -66,3 +66,7 @@ firewall-cmd --set-log-denied=all
 #iptables -I INPUT_direct -m tcp -p tcp -i virbr0 --dport 623 -j ACCEPT
 #iptables -I INPUT_direct -m tcp -p tcp -i virbr0 --dport 80 -j ACCEPT
 
+
+
+
+systemctl restart firewalld 
