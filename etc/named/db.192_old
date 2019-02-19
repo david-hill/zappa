@@ -1,0 +1,24 @@
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	wolfe. root.wolfe. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	wolfe.
+1.1.168	IN	PTR	wolfe.
+2.1.168	IN	PTR	delorimier.
+3.1.168	IN	PTR	montcalmw.
+4.1.168	IN	PTR	montcalm.
+5.1.168	IN	PTR	colborne.
+6.1.168	IN	PTR	wireless.
+7.1.168	IN	PTR	vmware.
+10.1.168    IN  PTR ipod.
+11.1.168    IN  PTR ps3.
+12.1.168    IN  PTR prefontaine-1.
+13.1.168    IN  PTR prefontaine-2.
+14.1.168    IN  PTR prefontaine.

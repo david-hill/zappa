@@ -1,0 +1,102 @@
+// This is the primary configuration file for the BIND DNS server named.
+//
+// Please read /usr/share/doc/bind/README.Debian for information on the 
+// structure of BIND configuration files in Debian for BIND versions 8.2.1 
+// and later, *BEFORE* you customize this configuration file.
+//
+
+include "/etc/bind/named.conf.options";
+
+// reduce log verbosity on issues outside our control
+logging {
+  channel simple_log {
+    file "/var/log/named/bind.log" versions 3 size 5m;
+    print-time yes;
+    print-severity yes;
+    print-category yes;
+  };
+  category default {
+    simple_log;
+  };
+  category queries {
+    simple_log;
+  }
+
+  category lame-servers { null; };
+  category cname { null; };
+};
+
+// prime the server with knowledge of the root servers
+zone "." {
+        type hint;
+        file "/etc/bind/db.root";
+};
+
+// be authoritative for the localhost forward and reverse zones, and for
+// broadcast zones as per RFC 1912
+
+zone "localhost" {
+        type master;
+        file "/etc/bind/db.local";
+};
+
+zone "quebec" {
+        type master;
+        file "/etc/bind/db.quebec";
+};
+zone "1.168.192.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.quebecr";
+};
+
+
+//zone "wolfe" {
+//        type master;
+//        file "/etc/bind/db.wolfe";
+//};
+//zone "delorimier" {
+//        type master;
+//        file "/etc/bind/db.delorimier";
+//};
+//zone "montcalm" {
+//        type master;
+//        file "/etc/bind/db.montcalm";
+//};
+//zone "montcalmw" {
+//        type master;
+//        file "/etc/bind/db.montcalmw";
+//};
+//zone "wireless" {
+//        type master;
+//        file "/etc/bind/db.wireless";
+//};
+//zone "colborne" {
+//        type master;
+//        file "/etc/bind/db.colborne";
+//};
+//zone "vmware" {
+//        type master;
+//        file "/etc/bind/db.vmware";
+//};
+//zone "192.in-addr.arpa" {
+//        type master;
+//        file "/etc/bind/db.192";
+//};
+
+zone "127.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.127";
+};
+
+zone "0.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.0";
+};
+
+zone "255.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.255";
+};
+
+// add local zone definitions here
+include "/etc/bind/named.conf.local";

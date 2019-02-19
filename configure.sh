@@ -47,6 +47,10 @@ cp etc/cyrus.conf /etc/
 cp etc/yum.repos.d/* /etc/yum.repos.d
 cp etc/sudoers.d/* /etc/sudoers.d/
 
+cp etc/named.conf /etc/
+cp etc/named/* /etc/named/named.conf
+systemctl restart named
+
 cp etc/firewalld/firewalld.conf /etc/firewalld
 systemctl restart firewalld
 firewall-cmd --reload

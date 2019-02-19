@@ -1,0 +1,33 @@
+;
+; BIND reverse data file for 192.168.1.x / .home eth0 interface
+;
+
+$TTL  24H
+@       IN      SOA     orion. hostmaster.orion. (
+                          2010080500       ; serial, todays date + todays serial#
+                             8H         ; Refresh
+                             2H         ; Retry
+                             1W         ; Expire
+                             1D )       ; Default TTL (Time To Live)
+
+          IN    NS      orion.
+
+1         IN    PTR     wolfe.orion.
+2         IN    PTR     delorimier.orion.
+3         IN    PTR     montcalmw.orion.
+4         IN    PTR     montcalm.orion.
+5         IN    PTR     colborne.orion.
+6         IN    PTR     wireless.orion.
+7         IN    PTR     vmware.orion.
+10          IN  PTR     ipod.orion.
+11          IN  PTR     ps3.orion.
+12          IN  PTR     prefontaine-1.orion.
+13          IN  PTR     prefontaine-2.orion.
+14          IN  PTR     prefontaine.orion.
+15          IN  PTR     papineau.orion.
+16          IN  PTR     magnolia.orion.
+17          IN  PTR     prefontaine-3.orion.
+22          IN  PTR     nelson.orion.
+27          IN  PTR     otto.orion.
+56          IN  PTR     zappa-ilo.orion.
+57          IN  PTR     zappa.orion.

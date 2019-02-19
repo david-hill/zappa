@@ -1,0 +1,41 @@
+$TTL  24H
+@        IN       SOA      orion. hostmaster.orion. (
+                   2019021900        ; serial
+                   10800             ; refresh (10800 seconds = 3 hours)
+                   3600              ; retry (3600 seconds = 1 hour)
+                   3600000           ; expire
+                   86400 )           ; negative cache time-to-live
+	            IN	NS	    zappa.orion.
+	            IN	MX	10	imap.orion.
+delorimier    IN	A       192.168.1.2
+zappa   	    IN	A	      192.168.1.3
+montcalm	    IN	A	      192.168.1.4
+colborne	    IN 	A       192.168.1.5
+wireless      IN  A       192.168.1.6
+vmware        IN  A       192.168.1.7
+wolfe	  	    IN	A	      192.168.1.8
+ipod          IN  A       192.168.1.10
+ps3           IN  A       192.168.1.11
+prefontaine-1 IN  A       192.168.1.12
+prefontaine-2 IN  A       192.168.1.13
+prefontaine   IN  A       192.168.1.14
+papineau      IN  A       192.168.1.15
+magnolia      IN  A       192.168.1.16
+prefontaine-3 IN  A       192.168.1.17
+nelson        IN  A       192.168.1.22
+otto          IN  A       192.168.1.27
+zappa-ilo     IN  A       192.168.1.56
+zappa         IN  A       192.168.1.3
+pop3		      IN	CNAME	zappa
+proxy		      IN	CNAME	zappa
+pop		        IN	CNAME	zappa
+ns		        IN	CNAME	zappa
+ftp		        IN	CNAME	zappa
+web		        IN	CNAME	zappa
+imap		      IN	CNAME	zappa
+smtp		      IN	CNAME	zappa
+proxy         IN  CNAME   zappa
+wpad          IN  CNAME   zappa
+wpac          IN  CNAME   zappa
+@             TXT         "orion, my DNS"
+
