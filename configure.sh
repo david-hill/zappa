@@ -24,7 +24,7 @@ function enable_start {
   fi
 }
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned lm_sensors
 debuginfo-install cyrus-imapd libgcc
 debuginfo-install $( rpm -qR cyrus-imapd | awk '{ print $1 }' | grep -v rpmlib )
 
@@ -62,6 +62,8 @@ cp var/lib/tftpboot/* /var/lib/tftpboot
 
 wget http://techedemic.com/wp-content/uploads/2015/10/8-07-14_MegaCLI.zip
 wget http://www.avagotech.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/8-07-14_MegaCLI.zip
+
+wget -nd -r --no-parent http://fedora.mirror.iweb.com/linux/development/rawhide/Everything/x86_64/os/isolinux/
 
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/initrd.img
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/vmlinuz
