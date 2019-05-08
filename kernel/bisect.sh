@@ -50,8 +50,14 @@ if [ $rc -eq 0 ]; then
               rc=$?
               if [ $rc -eq 0 ]; then
                 menuentry=$(grep $version /boot/grub2/grub.cfg  | grep menuentry | awk -F\' '{ print $2 }')
-                grub2-set-default "$menuentry"
-                rc=$?
+		if [ ! -z "$menuentry" ]; then
+                  grub2-set-default "$menuentry"
+                  rc=$?
+		else
+                  #grubby --info=ALL
+                  grubby --add-kernel=/boot/vmlinuz-$version  --title=$version --make-default
+		  rc=$?
+		fi
               fi
             fi
           fi
