@@ -77,7 +77,8 @@ mv vmlinuz /var/lib/tftpboot/fedora
 
 cp etc/postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
-chown postfix /var/spool/postfix
+chown -R postfix /var/spool/postfix
+chown -R postfix /var/spool/MailScanner
 cp etc/ntpd.conf /etc
 cp -pr etc/MailScanner/* /etc/MailScanner
 cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
