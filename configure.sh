@@ -25,7 +25,7 @@ function enable_start {
 }
 
 yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned lm_sensors python3-mysql python3-musicbrainzngs crash kernel-devel
-debuginfo-install cyrus-imapd libgcc
+debuginfo-install cyrus-imapd libgcc kernel
 debuginfo-install $( rpm -qR cyrus-imapd | awk '{ print $1 }' | grep -v rpmlib )
 
 wget https://www.dcc-servers.net/dcc/source/dcc.tar.Z
