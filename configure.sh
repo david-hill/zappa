@@ -56,7 +56,7 @@ systemctl restart firewalld
 firewall-cmd --reload
 
 if [ ! -e /etc/pki/cyrus-imapd/cyrus-imapd.pem ]; then
-  openssl req -new -x509 -nodes -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 3650
+  openssl req -new -x509 -nodes -config etc/pki/tls/openssl.cnf -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 825 -extensions ext_req
 fi
 
 cp root/.ssh/* /root/.ssh/

@@ -33,6 +33,7 @@ firewall-cmd --permanent --zone=external --add-forward-port=port=2235:proto=udp:
 firewall-cmd --permanent --zone=external --add-forward-port=port=2236:proto=udp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=51413:proto=tcp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-port=143/tcp
+firewall-cmd --permanent --zone=external --add-port=993/tcp
 firewall-cmd --permanent --zone=external --add-port=21/tcp
 firewall-cmd --permanent --zone=external --add-port=22/tcp
 echo "Configuring external zone rules"
@@ -41,6 +42,7 @@ echo "Configuring internal zone rules"
 firewall-cmd --permanent --zone=internal --add-port=8080/tcp
 firewall-cmd --permanent --zone=internal --add-port=16509/tcp
 firewall-cmd --permanent --zone=internal --add-port=143/tcp
+firewall-cmd --permanent --zone=internal --add-port=993/tcp
 firewall-cmd --permanent --zone=internal --add-port=5900-5920/tcp
 firewall-cmd --permanent --zone=internal --add-port=22/tcp
 firewall-cmd --permanent --zone=internal --add-port=25/tcp
