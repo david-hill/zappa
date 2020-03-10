@@ -86,6 +86,7 @@ cp etc/ups/* /etc/ups
 cp etc/my.cnf /etc
 cp etc/sysconfig/* /etc/sysconfig
 cp etc/dhcp/* /etc/dhcp
+cp etc/gdm/* /etc/gdm
 cp usr/share/selinux/devel/* /usr/share/selinux/devel
 modules=$(find /usr/share/selinux/devel -name \*.pp)
 for module in $(modules); do
