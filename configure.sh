@@ -93,6 +93,7 @@ for module in $(modules); do
   semodule -i $module
 done
 
+sed -i 's#secure_path = .*#secure_path = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin#' /etc/sudoers
 cp usr/lib/systemd/system/* /usr/lib/systemd/system
 systemctl daemon-reload
 systemctl reset-failed
