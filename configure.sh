@@ -122,4 +122,4 @@ enable_start named
 enable_start dhcpd
 enable_start tuned
 
-tuned-adm profile virtual-host
+tuned-adm profile balanced
