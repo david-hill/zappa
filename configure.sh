@@ -88,6 +88,7 @@ cp etc/hosts.deny /etc
 cp etc/my.cnf /etc
 cp etc/sysconfig/* /etc/sysconfig
 cp etc/fail2ban/* /etc/fail2ban
+cp -pr etc/fail2ban/action.d /etc/fail2ban/action.d
 cp etc/dhcp/* /etc/dhcp
 cp etc/gdm/* /etc/gdm
 cp usr/share/selinux/devel/* /usr/share/selinux/devel
