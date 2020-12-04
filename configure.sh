@@ -83,6 +83,7 @@ cp etc/ntpd.conf /etc
 cp -pr etc/MailScanner/* /etc/MailScanner
 cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
 cp etc/ups/* /etc/ups
+cp etc/hosts.deny /etc
 cp etc/my.cnf /etc
 cp etc/sysconfig/* /etc/sysconfig
 cp etc/dhcp/* /etc/dhcp
@@ -97,6 +98,11 @@ sed -i 's#secure_path = .*#secure_path = /usr/local/sbin:/usr/local/bin:/usr/sbi
 cp usr/lib/systemd/system/* /usr/lib/systemd/system
 systemctl daemon-reload
 systemctl reset-failed
+
+systemctl enable sshd.socket
+systemctl start sshd.socket
+
+systemctl restart sshd.service
 
 mkdir -p /usr/src/kernels/linux-stable
 cp kernel/* /usr/src/kernels/linux-stable
