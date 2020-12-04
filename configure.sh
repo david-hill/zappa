@@ -24,7 +24,7 @@ function enable_start {
   fi
 }
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned lm_sensors python3-mysql python3-musicbrainzngs crash kernel-devel gettext-devel
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned lm_sensors python3-mysql python3-musicbrainzngs crash kernel-devel gettext-devel fail2ban
 debuginfo-install cyrus-imapd libgcc kernel
 debuginfo-install $( rpm -qR cyrus-imapd | awk '{ print $1 }' | grep -v rpmlib )
 
@@ -86,6 +86,7 @@ cp etc/ups/* /etc/ups
 cp etc/hosts.deny /etc
 cp etc/my.cnf /etc
 cp etc/sysconfig/* /etc/sysconfig
+cp etc/fail2ban/* /etc/fail2ban
 cp etc/dhcp/* /etc/dhcp
 cp etc/gdm/* /etc/gdm
 cp usr/share/selinux/devel/* /usr/share/selinux/devel
@@ -116,6 +117,7 @@ mkdir /etc/virtualbmc
 cp etc/virtualbmc /etc/virtualbmc
 
 enable_start vbmcd
+enable_start fail2ban
 enable_start tftp
 enable_start nut-server
 enable_start cyrus-imapd
