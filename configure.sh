@@ -82,6 +82,7 @@ chown -R postfix /var/spool/MailScanner
 cp etc/ntpd.conf /etc
 cp -pr etc/MailScanner/* /etc/MailScanner
 cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
+cp etc/ssh/* /etc/ssh/
 cp etc/ups/* /etc/ups
 cp etc/hosts.deny /etc
 cp etc/my.cnf /etc
