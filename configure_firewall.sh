@@ -58,6 +58,9 @@ firewall-cmd --permanent --zone=internal --add-port=623/udp
 firewall-cmd --permanent --zone=internal --add-port=623/tcp
 firewall-cmd --permanent --zone=internal --add-port=123/udp
 firewall-cmd --permanent --zone=internal --add-port=123/tcp
+
+echo "Configuring libvir zone rules"
+firewall-cmd --permanent --add-service=ntp --zone=libvirt
 echo "Reloading firewall"
 firewall-cmd --reload
 
