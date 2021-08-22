@@ -83,6 +83,8 @@ cp etc/ntpd.conf /etc
 cp -pr etc/MailScanner/* /etc/MailScanner
 cp -pr etc/mail/spamassassin/* /etc/mail/spamassassin/
 cp etc/ssh/* /etc/ssh/
+cp etc/sysconfig/* /etc/sysconfig/
+cp etc/oidentd.conf /etc/
 cp etc/ups/* /etc/ups
 cp etc/hosts.deny /etc
 cp etc/my.cnf /etc
