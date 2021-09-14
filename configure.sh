@@ -74,6 +74,8 @@ wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/image
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/vmlinuz
 mv initrd.img /var/lib/tftpboot/fedora
 mv vmlinuz /var/lib/tftpboot/fedora
+mkdir /var/lib/tftpboot/efi
+cp /boot/efi/EFI/BOOT/BOOTX64.EFI /var/lib/tftpboot/efi
 
 cp etc/postfix/* /etc/postfix
 postmap /etc/postfix/header_checks
