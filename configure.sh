@@ -56,7 +56,7 @@ systemctl restart firewalld
 firewall-cmd --reload
 
 if [ ! -e /etc/pki/cyrus-imapd/cyrus-imapd.pem ]; then
-  openssl req -new -x509 -nodes -config etc/pki/tls/openssl.cnf -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 825 -extensions ext_req
+  openssl req -new -x509 -nodes -config etc/pki/tls/openssl.cnf -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 825 -extensions extreq
 fi
 
 cp root/.ssh/* /root/.ssh/
@@ -69,6 +69,11 @@ wget http://techedemic.com/wp-content/uploads/2015/10/8-07-14_MegaCLI.zip
 wget http://www.avagotech.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/8-07-14_MegaCLI.zip
 
 wget -nd -r --no-parent http://fedora.mirror.iweb.com/linux/development/rawhide/Everything/x86_64/os/isolinux/
+
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+yum install fontconfig java-11-openjdk
+yum install jenkins
 
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/initrd.img
 wget https://muug.ca/mirror/fedora/linux/releases/28/Workstation/x86_64/os/images/pxeboot/vmlinuz
