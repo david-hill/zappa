@@ -56,7 +56,8 @@ systemctl restart firewalld
 firewall-cmd --reload
 
 if [ ! -e /etc/pki/cyrus-imapd/cyrus-imapd.pem ]; then
-  openssl req -new -x509 -nodes -config etc/pki/tls/openssl.cnf -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 825 -extensions extreq
+  cp etc/pki/tls/openssl.cnf /etc/pki/tls/openssl.cnf
+  openssl req -new -x509 -nodes -config etc/pki/tls/openssl.cnf -out /etc/pki/cyrus-imapd/cyrus-imapd.pem -keyout /etc/pki/cyrus-imapd/cyrus-imapd.pem -days 398 -extensions req_ext
 fi
 
 cp root/.ssh/* /root/.ssh/
@@ -143,3 +144,5 @@ enable_start dhcpd
 enable_start tuned
 
 tuned-adm profile balanced
+
+sudo -u gdm dbus-run-session gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
