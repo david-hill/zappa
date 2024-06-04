@@ -146,4 +146,6 @@ enable_start tuned
 
 tuned-adm profile balanced
 
-sudo -u gdm dbus-run-session gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+sudo -u root dbus-run-session gsettings list-recursively org.gnome.settings-daemon.plugins.power | grep sleep
+sudo -u root dbus-run-session gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
+sudo -u root dbus-run-session gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
