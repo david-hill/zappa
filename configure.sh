@@ -42,6 +42,7 @@ mkdir -p /var/lib/imap/sieve/d/dhill/
 cp var/lib/imap/sieve/d/dhill/* /var/lib/imap/sieve/d/dhill/
 chmod 755 /var/lib/imap/sieve/d/dhill/sieve
 
+cp etc/systemd/sleep.conf /etc/systemd
 cp etc/imapd.conf /etc/
 cp etc/cyrus.conf /etc/
 cp etc/yum.repos.d/* /etc/yum.repos.d
