@@ -371,7 +371,7 @@ ess_cert_id_alg		= sha256	# algorithm to compute certificate
 				# identifier (optional, default: sha1)
 
 [ req_ext ]
-extendedKeyUsage = serverAuth
+extendedKeyUsage = serverAuth, clientAuth
 subjectAltName = @alt_names
 
 [ alt_names ]

@@ -31,8 +31,12 @@ firewall-cmd --permanent --zone=external --add-forward-port=port=16946:proto=tcp
 firewall-cmd --permanent --zone=external --add-forward-port=port=2236:proto=tcp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=2235:proto=udp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=2236:proto=udp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=49229:proto=tcp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=57666:proto=udp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=51413:proto=tcp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-forward-port=port=51413:proto=udp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=65215:proto=tcp:toaddr=192.168.1.22
+firewall-cmd --permanent --zone=external --add-forward-port=port=65215:proto=udp:toaddr=192.168.1.22
 firewall-cmd --permanent --zone=external --add-port=113/tcp
 firewall-cmd --permanent --zone=external --add-port=143/tcp
 firewall-cmd --permanent --zone=external --add-port=993/tcp
