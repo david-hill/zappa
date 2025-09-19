@@ -24,7 +24,7 @@ function enable_start {
   fi
 }
 
-yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned lm_sensors python3-mysql python3-musicbrainzngs crash kernel-devel gettext-devel fail2ban oidentd
+yum install -y spamassassin mariadb mariadb-server cacti cyrus-imapd net-snmp-utils net-snmp nut dhcp-server selinux-policy-devel gcc syslinux-tftpboot tftp-server tftp tuned lm_sensors python3-mysql python3-musicbrainzngs crash kernel-devel gettext-devel fail2ban oidentd opendkim
 debuginfo-install cyrus-imapd libgcc kernel
 debuginfo-install $( rpm -qR cyrus-imapd | awk '{ print $1 }' | grep -v rpmlib )
 
